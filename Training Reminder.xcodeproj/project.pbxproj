@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D815AF682ABD1E1300B25E4C /* RequestPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D815AF672ABD1E1300B25E4C /* RequestPanel.swift */; };
+		D82C8F1B2AB26216001DDFAA /* RefreshableScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = D82C8F1A2AB26216001DDFAA /* RefreshableScrollView */; };
 		D82E16F92AA640DE0005CF7D /* Training_ReminderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82E16F82AA640DE0005CF7D /* Training_ReminderApp.swift */; };
 		D82E16FB2AA640DE0005CF7D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82E16FA2AA640DE0005CF7D /* ContentView.swift */; };
 		D82E16FD2AA640DF0005CF7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D82E16FC2AA640DF0005CF7D /* Assets.xcassets */; };
@@ -14,6 +16,39 @@
 		D82E170B2AA640DF0005CF7D /* Training_ReminderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82E170A2AA640DF0005CF7D /* Training_ReminderTests.swift */; };
 		D82E17152AA640DF0005CF7D /* Training_ReminderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82E17142AA640DF0005CF7D /* Training_ReminderUITests.swift */; };
 		D82E17172AA640DF0005CF7D /* Training_ReminderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82E17162AA640DF0005CF7D /* Training_ReminderUITestsLaunchTests.swift */; };
+		D83DAC3F2AA7BF77004C3310 /* KeyboardAvoider in Frameworks */ = {isa = PBXBuildFile; productRef = D83DAC3E2AA7BF77004C3310 /* KeyboardAvoider */; };
+		D83DAC412AA8CC09004C3310 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83DAC402AA8CC09004C3310 /* SignInView.swift */; };
+		D83DAC462AA8E660004C3310 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83DAC452AA8E660004C3310 /* Extensions.swift */; };
+		D83DAC492AA8EA8D004C3310 /* Valid in Frameworks */ = {isa = PBXBuildFile; productRef = D83DAC482AA8EA8D004C3310 /* Valid */; };
+		D83DAC4C2AA918E3004C3310 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = D83DAC4B2AA918E3004C3310 /* AlertToast */; };
+		D83DAC4F2AA92DAD004C3310 /* AuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83DAC4E2AA92DAD004C3310 /* AuthState.swift */; };
+		D83DAC512AA9300E004C3310 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83DAC502AA9300E004C3310 /* HomeView.swift */; };
+		D83DAC552AAA34F0004C3310 /* FieldValidators.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83DAC542AAA34F0004C3310 /* FieldValidators.swift */; };
+		D83DAC572AAA360F004C3310 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83DAC562AAA360F004C3310 /* CustomTextField.swift */; };
+		D83DAC592AAA398D004C3310 /* ForgotPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83DAC582AAA398D004C3310 /* ForgotPasswordView.swift */; };
+		D83DAC5B2AAA640D004C3310 /* CircleProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83DAC5A2AAA640D004C3310 /* CircleProgressBar.swift */; };
+		D83DAC5D2AAA7DDE004C3310 /* AddingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83DAC5C2AAA7DDE004C3310 /* AddingItemView.swift */; };
+		D84BFAEE2AA677D0004F80D1 /* SPConfetti in Frameworks */ = {isa = PBXBuildFile; productRef = D84BFAED2AA677D0004F80D1 /* SPConfetti */; };
+		D84BFAF72AA68BB3004F80D1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D84BFAF62AA68BB2004F80D1 /* GoogleService-Info.plist */; };
+		D84BFAF82AA68BB3004F80D1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D84BFAF62AA68BB2004F80D1 /* GoogleService-Info.plist */; };
+		D84BFAF92AA68BB3004F80D1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D84BFAF62AA68BB2004F80D1 /* GoogleService-Info.plist */; };
+		D84BFAFF2AA6B872004F80D1 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84BFAFE2AA6B872004F80D1 /* FirebaseService.swift */; };
+		D84BFB112AA7A3C2004F80D1 /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = D84BFB102AA7A3C2004F80D1 /* PopupView */; };
+		D84BFB142AA7B4D8004F80D1 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = D84BFB132AA7B4D8004F80D1 /* FirebaseAuth */; };
+		D84BFB162AA7B4D8004F80D1 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = D84BFB152AA7B4D8004F80D1 /* FirebaseFirestore */; };
+		D84BFB182AA7B4D8004F80D1 /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = D84BFB172AA7B4D8004F80D1 /* FirebaseFirestoreCombine-Community */; };
+		D84BFB1A2AA7B4D8004F80D1 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D84BFB192AA7B4D8004F80D1 /* FirebaseFirestoreSwift */; };
+		D84BFB1C2AA7B4D8004F80D1 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = D84BFB1B2AA7B4D8004F80D1 /* FirebaseFunctions */; };
+		D84BFB1E2AA7B4D9004F80D1 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = D84BFB1D2AA7B4D9004F80D1 /* FirebaseMessaging */; };
+		D85ABC562ACC6D82008BA139 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = D85ABC552ACC6D82008BA139 /* Network.swift */; };
+		D86C49AD2ABB75A40084748B /* FriendPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86C49AC2ABB75A40084748B /* FriendPanel.swift */; };
+		D86C49AF2ABC95860084748B /* RequestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86C49AE2ABC95860084748B /* RequestsView.swift */; };
+		D86C49B12ABC95BD0084748B /* SocialContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86C49B02ABC95BD0084748B /* SocialContainerView.swift */; };
+		D8760B292AAFB8A9004D0292 /* EditingActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8760B282AAFB8A9004D0292 /* EditingActivityView.swift */; };
+		D8C24DA62AA65C45004923EC /* ActivityLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C24DA52AA65C45004923EC /* ActivityLabel.swift */; };
+		D8D6F6902ABE68FD00E026A5 /* FriendRequestPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D6F68F2ABE68FD00E026A5 /* FriendRequestPanel.swift */; };
+		D8FCFB6C2AB8D2B00096FA5A /* ActivityLabelPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8FCFB6B2AB8D2B00096FA5A /* ActivityLabelPreview.swift */; };
+		D8FCFB6E2AB9EC6A0096FA5A /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8FCFB6D2AB9EC6A0096FA5A /* FriendsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +69,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D815AF672ABD1E1300B25E4C /* RequestPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestPanel.swift; sourceTree = "<group>"; };
 		D82E16F52AA640DE0005CF7D /* Training Reminder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Training Reminder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D82E16F82AA640DE0005CF7D /* Training_ReminderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Training_ReminderApp.swift; sourceTree = "<group>"; };
 		D82E16FA2AA640DE0005CF7D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -45,6 +81,27 @@
 		D82E17102AA640DF0005CF7D /* Training ReminderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Training ReminderUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D82E17142AA640DF0005CF7D /* Training_ReminderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Training_ReminderUITests.swift; sourceTree = "<group>"; };
 		D82E17162AA640DF0005CF7D /* Training_ReminderUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Training_ReminderUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		D83DAC402AA8CC09004C3310 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		D83DAC452AA8E660004C3310 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		D83DAC4E2AA92DAD004C3310 /* AuthState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthState.swift; sourceTree = "<group>"; };
+		D83DAC502AA9300E004C3310 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		D83DAC542AAA34F0004C3310 /* FieldValidators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldValidators.swift; sourceTree = "<group>"; };
+		D83DAC562AAA360F004C3310 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		D83DAC582AAA398D004C3310 /* ForgotPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordView.swift; sourceTree = "<group>"; };
+		D83DAC5A2AAA640D004C3310 /* CircleProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressBar.swift; sourceTree = "<group>"; };
+		D83DAC5C2AAA7DDE004C3310 /* AddingItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingItemView.swift; sourceTree = "<group>"; };
+		D84BFAF62AA68BB2004F80D1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D84BFAFA2AA68D17004F80D1 /* Training-Reminder-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Training-Reminder-Info.plist"; sourceTree = SOURCE_ROOT; };
+		D84BFAFE2AA6B872004F80D1 /* FirebaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
+		D85ABC552ACC6D82008BA139 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		D86C49AC2ABB75A40084748B /* FriendPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendPanel.swift; sourceTree = "<group>"; };
+		D86C49AE2ABC95860084748B /* RequestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsView.swift; sourceTree = "<group>"; };
+		D86C49B02ABC95BD0084748B /* SocialContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialContainerView.swift; sourceTree = "<group>"; };
+		D8760B282AAFB8A9004D0292 /* EditingActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditingActivityView.swift; sourceTree = "<group>"; };
+		D8C24DA52AA65C45004923EC /* ActivityLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLabel.swift; sourceTree = "<group>"; };
+		D8D6F68F2ABE68FD00E026A5 /* FriendRequestPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestPanel.swift; sourceTree = "<group>"; };
+		D8FCFB6B2AB8D2B00096FA5A /* ActivityLabelPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLabelPreview.swift; sourceTree = "<group>"; };
+		D8FCFB6D2AB9EC6A0096FA5A /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +109,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D83DAC492AA8EA8D004C3310 /* Valid in Frameworks */,
+				D84BFB1E2AA7B4D9004F80D1 /* FirebaseMessaging in Frameworks */,
+				D84BFB112AA7A3C2004F80D1 /* PopupView in Frameworks */,
+				D83DAC3F2AA7BF77004C3310 /* KeyboardAvoider in Frameworks */,
+				D84BFAEE2AA677D0004F80D1 /* SPConfetti in Frameworks */,
+				D84BFB1C2AA7B4D8004F80D1 /* FirebaseFunctions in Frameworks */,
+				D84BFB1A2AA7B4D8004F80D1 /* FirebaseFirestoreSwift in Frameworks */,
+				D84BFB182AA7B4D8004F80D1 /* FirebaseFirestoreCombine-Community in Frameworks */,
+				D83DAC4C2AA918E3004C3310 /* AlertToast in Frameworks */,
+				D84BFB162AA7B4D8004F80D1 /* FirebaseFirestore in Frameworks */,
+				D84BFB142AA7B4D8004F80D1 /* FirebaseAuth in Frameworks */,
+				D82C8F1B2AB26216001DDFAA /* RefreshableScrollView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,11 +164,26 @@
 		D82E16F72AA640DE0005CF7D /* Training Reminder */ = {
 			isa = PBXGroup;
 			children = (
+				D83DAC4D2AA92D93004C3310 /* Views */,
+				D84BFAFA2AA68D17004F80D1 /* Training-Reminder-Info.plist */,
+				D84BFAF62AA68BB2004F80D1 /* GoogleService-Info.plist */,
 				D82E16F82AA640DE0005CF7D /* Training_ReminderApp.swift */,
 				D82E16FA2AA640DE0005CF7D /* ContentView.swift */,
 				D82E16FC2AA640DF0005CF7D /* Assets.xcassets */,
 				D82E16FE2AA640DF0005CF7D /* Training_Reminder.entitlements */,
 				D82E16FF2AA640DF0005CF7D /* Preview Content */,
+				D8C24DA52AA65C45004923EC /* ActivityLabel.swift */,
+				D84BFAFE2AA6B872004F80D1 /* FirebaseService.swift */,
+				D83DAC452AA8E660004C3310 /* Extensions.swift */,
+				D83DAC4E2AA92DAD004C3310 /* AuthState.swift */,
+				D83DAC542AAA34F0004C3310 /* FieldValidators.swift */,
+				D83DAC562AAA360F004C3310 /* CustomTextField.swift */,
+				D83DAC5A2AAA640D004C3310 /* CircleProgressBar.swift */,
+				D8FCFB6B2AB8D2B00096FA5A /* ActivityLabelPreview.swift */,
+				D86C49AC2ABB75A40084748B /* FriendPanel.swift */,
+				D815AF672ABD1E1300B25E4C /* RequestPanel.swift */,
+				D8D6F68F2ABE68FD00E026A5 /* FriendRequestPanel.swift */,
+				D85ABC552ACC6D82008BA139 /* Network.swift */,
 			);
 			path = "Training Reminder";
 			sourceTree = "<group>";
@@ -129,6 +213,21 @@
 			path = "Training ReminderUITests";
 			sourceTree = "<group>";
 		};
+		D83DAC4D2AA92D93004C3310 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D83DAC402AA8CC09004C3310 /* SignInView.swift */,
+				D83DAC502AA9300E004C3310 /* HomeView.swift */,
+				D83DAC582AAA398D004C3310 /* ForgotPasswordView.swift */,
+				D83DAC5C2AAA7DDE004C3310 /* AddingItemView.swift */,
+				D8760B282AAFB8A9004D0292 /* EditingActivityView.swift */,
+				D8FCFB6D2AB9EC6A0096FA5A /* FriendsView.swift */,
+				D86C49AE2ABC95860084748B /* RequestsView.swift */,
+				D86C49B02ABC95BD0084748B /* SocialContainerView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -145,6 +244,20 @@
 			dependencies = (
 			);
 			name = "Training Reminder";
+			packageProductDependencies = (
+				D84BFAED2AA677D0004F80D1 /* SPConfetti */,
+				D84BFB102AA7A3C2004F80D1 /* PopupView */,
+				D84BFB132AA7B4D8004F80D1 /* FirebaseAuth */,
+				D84BFB152AA7B4D8004F80D1 /* FirebaseFirestore */,
+				D84BFB172AA7B4D8004F80D1 /* FirebaseFirestoreCombine-Community */,
+				D84BFB192AA7B4D8004F80D1 /* FirebaseFirestoreSwift */,
+				D84BFB1B2AA7B4D8004F80D1 /* FirebaseFunctions */,
+				D84BFB1D2AA7B4D9004F80D1 /* FirebaseMessaging */,
+				D83DAC3E2AA7BF77004C3310 /* KeyboardAvoider */,
+				D83DAC482AA8EA8D004C3310 /* Valid */,
+				D83DAC4B2AA918E3004C3310 /* AlertToast */,
+				D82C8F1A2AB26216001DDFAA /* RefreshableScrollView */,
+			);
 			productName = "Training Reminder";
 			productReference = D82E16F52AA640DE0005CF7D /* Training Reminder.app */;
 			productType = "com.apple.product-type.application";
@@ -217,6 +330,17 @@
 				Base,
 			);
 			mainGroup = D82E16EC2AA640DE0005CF7D;
+			packageReferences = (
+				D82E17232AA653950005CF7D /* XCRemoteSwiftPackageReference "CircularProgressSwiftUI" */,
+				D84BFAEC2AA677D0004F80D1 /* XCRemoteSwiftPackageReference "SPConfetti" */,
+				D84BFB0F2AA7A3C2004F80D1 /* XCRemoteSwiftPackageReference "PopupView" */,
+				D84BFB122AA7B4D8004F80D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				D83DAC3D2AA7BF77004C3310 /* XCRemoteSwiftPackageReference "KeyboardAvoider" */,
+				D83DAC472AA8EA8D004C3310 /* XCRemoteSwiftPackageReference "Valid" */,
+				D83DAC4A2AA918E3004C3310 /* XCRemoteSwiftPackageReference "AlertToast" */,
+				D82C8F192AB26216001DDFAA /* XCRemoteSwiftPackageReference "RefreshableScrollView" */,
+				D86C49B22ABC9E3A0084748B /* XCRemoteSwiftPackageReference "SlidingTabView" */,
+			);
 			productRefGroup = D82E16F62AA640DE0005CF7D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -235,6 +359,7 @@
 			files = (
 				D82E17012AA640DF0005CF7D /* Preview Assets.xcassets in Resources */,
 				D82E16FD2AA640DF0005CF7D /* Assets.xcassets in Resources */,
+				D84BFAF72AA68BB3004F80D1 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,6 +367,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D84BFAF82AA68BB3004F80D1 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,6 +375,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D84BFAF92AA68BB3004F80D1 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,8 +386,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D86C49B12ABC95BD0084748B /* SocialContainerView.swift in Sources */,
+				D86C49AF2ABC95860084748B /* RequestsView.swift in Sources */,
+				D85ABC562ACC6D82008BA139 /* Network.swift in Sources */,
+				D83DAC572AAA360F004C3310 /* CustomTextField.swift in Sources */,
 				D82E16FB2AA640DE0005CF7D /* ContentView.swift in Sources */,
+				D83DAC5B2AAA640D004C3310 /* CircleProgressBar.swift in Sources */,
+				D86C49AD2ABB75A40084748B /* FriendPanel.swift in Sources */,
+				D815AF682ABD1E1300B25E4C /* RequestPanel.swift in Sources */,
+				D83DAC552AAA34F0004C3310 /* FieldValidators.swift in Sources */,
+				D83DAC4F2AA92DAD004C3310 /* AuthState.swift in Sources */,
+				D83DAC412AA8CC09004C3310 /* SignInView.swift in Sources */,
+				D83DAC512AA9300E004C3310 /* HomeView.swift in Sources */,
+				D8D6F6902ABE68FD00E026A5 /* FriendRequestPanel.swift in Sources */,
+				D83DAC5D2AAA7DDE004C3310 /* AddingItemView.swift in Sources */,
+				D8C24DA62AA65C45004923EC /* ActivityLabel.swift in Sources */,
+				D83DAC462AA8E660004C3310 /* Extensions.swift in Sources */,
+				D83DAC592AAA398D004C3310 /* ForgotPasswordView.swift in Sources */,
 				D82E16F92AA640DE0005CF7D /* Training_ReminderApp.swift in Sources */,
+				D84BFAFF2AA6B872004F80D1 /* FirebaseService.swift in Sources */,
+				D8FCFB6E2AB9EC6A0096FA5A /* FriendsView.swift in Sources */,
+				D8FCFB6C2AB8D2B00096FA5A /* ActivityLabelPreview.swift in Sources */,
+				D8760B292AAFB8A9004D0292 /* EditingActivityView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,23 +560,28 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Training Reminder/Training_Reminder.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Training Reminder/Preview Content\"";
 				DEVELOPMENT_TEAM = 94VBY346GX;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Training-Reminder-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Accountive;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
@@ -437,10 +589,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "andyvu.com.Training-Reminder";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -451,23 +605,28 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Training Reminder/Training_Reminder.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Training Reminder/Preview Content\"";
 				DEVELOPMENT_TEAM = 94VBY346GX;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Training-Reminder-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Accountive;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
@@ -475,10 +634,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "andyvu.com.Training-Reminder";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -612,6 +773,144 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D82C8F192AB26216001DDFAA /* XCRemoteSwiftPackageReference "RefreshableScrollView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Q42/RefreshableScrollView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.2;
+			};
+		};
+		D82E17232AA653950005CF7D /* XCRemoteSwiftPackageReference "CircularProgressSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ArnavMotwani/CircularProgressSwiftUI.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		D83DAC3D2AA7BF77004C3310 /* XCRemoteSwiftPackageReference "KeyboardAvoider" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/michaelhenry/KeyboardAvoider.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		D83DAC472AA8EA8D004C3310 /* XCRemoteSwiftPackageReference "Valid" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nerdsupremacist/Valid.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		D83DAC4A2AA918E3004C3310 /* XCRemoteSwiftPackageReference "AlertToast" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elai950/AlertToast.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		D84BFAEC2AA677D0004F80D1 /* XCRemoteSwiftPackageReference "SPConfetti" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ivanvorobei/SPConfetti";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.4.0;
+			};
+		};
+		D84BFB0F2AA7A3C2004F80D1 /* XCRemoteSwiftPackageReference "PopupView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/PopupView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		D84BFB122AA7B4D8004F80D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
+			};
+		};
+		D86C49B22ABC9E3A0084748B /* XCRemoteSwiftPackageReference "SlidingTabView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/QuynhNguyen/SlidingTabView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D82C8F1A2AB26216001DDFAA /* RefreshableScrollView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D82C8F192AB26216001DDFAA /* XCRemoteSwiftPackageReference "RefreshableScrollView" */;
+			productName = RefreshableScrollView;
+		};
+		D83DAC3E2AA7BF77004C3310 /* KeyboardAvoider */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D83DAC3D2AA7BF77004C3310 /* XCRemoteSwiftPackageReference "KeyboardAvoider" */;
+			productName = KeyboardAvoider;
+		};
+		D83DAC482AA8EA8D004C3310 /* Valid */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D83DAC472AA8EA8D004C3310 /* XCRemoteSwiftPackageReference "Valid" */;
+			productName = Valid;
+		};
+		D83DAC4B2AA918E3004C3310 /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D83DAC4A2AA918E3004C3310 /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
+		};
+		D84BFAED2AA677D0004F80D1 /* SPConfetti */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D84BFAEC2AA677D0004F80D1 /* XCRemoteSwiftPackageReference "SPConfetti" */;
+			productName = SPConfetti;
+		};
+		D84BFB102AA7A3C2004F80D1 /* PopupView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D84BFB0F2AA7A3C2004F80D1 /* XCRemoteSwiftPackageReference "PopupView" */;
+			productName = PopupView;
+		};
+		D84BFB132AA7B4D8004F80D1 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D84BFB122AA7B4D8004F80D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		D84BFB152AA7B4D8004F80D1 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D84BFB122AA7B4D8004F80D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		D84BFB172AA7B4D8004F80D1 /* FirebaseFirestoreCombine-Community */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D84BFB122AA7B4D8004F80D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseFirestoreCombine-Community";
+		};
+		D84BFB192AA7B4D8004F80D1 /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D84BFB122AA7B4D8004F80D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestoreSwift;
+		};
+		D84BFB1B2AA7B4D8004F80D1 /* FirebaseFunctions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D84BFB122AA7B4D8004F80D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFunctions;
+		};
+		D84BFB1D2AA7B4D9004F80D1 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D84BFB122AA7B4D8004F80D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D82E16ED2AA640DE0005CF7D /* Project object */;
 }

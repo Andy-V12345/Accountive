@@ -7,15 +7,58 @@
 
 import SwiftUI
 
+
 struct ContentView: View {
+    
+    @StateObject private var authState = AuthState()
+    @ObservedObject private var appState = AppState.shared
+    @State private var isSocialScreen = false
+    
+    @StateObject private var network = Network()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        Group {
+            if network.connected {
+                if authState.value == .undefined {
+                    ProgressView()
+                }
+                else if authState.value == .notAuthorized {
+                    SignInView()
+                        .environmentObject(authState)
+                }
+                else {
+                    HomeView()
+                        .environmentObject(authState)
+                }
+            }
+            else {
+                ZStack {
+                    Color.white.ignoresSafeArea()
+                    
+                    VStack(spacing: 15) {
+                        Image(systemName: "wifi.slash")
+                            .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
+                            .font(.title)
+                        Text("No connection!")
+                            .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
+                            .font(.subheadline)
+                        
+                    }
+                    .padding(.horizontal, 30)
+                    
+                    VStack {
+                        Text("ACCOUNTIVE")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
+                            .font(.system(size: 30))
+                            .fontWidth(.condensed)
+                            .bold()
+                        Spacer()
+                    }
+                    .padding(.top, 10)
+                }
+            }
         }
-        .padding()
     }
 }
 
