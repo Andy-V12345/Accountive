@@ -43,7 +43,7 @@ struct FriendPanel: View {
                         do {
                             let toFcmToken = try await firebaseService.getFcmTokenOfFriend(friendUid: friend.uid)
                             if toFcmToken != "" {
-                                try await firebaseService.notifyIndividual(username: authState.getUsername(), targetFcmKey: toFcmToken)
+                                try await firebaseService.notifyIndividual(targetFcmKey: toFcmToken, body: "\(authState.getUsername()) sent you a friend request!")
                             }
                         }
                         catch {

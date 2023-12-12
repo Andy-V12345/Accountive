@@ -265,7 +265,14 @@ class FirebaseService {
             ]
         ], merge: true)
         
-        // TODO: ADD FRIEND TO NOTIF GROUP
+        Task {
+            do {
+                try await self.notifyIndividual(targetFcmKey: friendToAdd.uid, body: "\(friendToAdd.username) accepted your friend request!")
+            }
+            catch {
+                throw error
+            }
+        }
         
     }
     
@@ -555,9 +562,9 @@ class FirebaseService {
     
     
     // MARK: SEND INDIVIDUAL NOTIF
-    func notifyIndividual(username: String, targetFcmKey: String) async throws {
+    func notifyIndividual(targetFcmKey: String, body: String) async throws {
         do {
-            let _ = try await functions.httpsCallable("notifyIndividual").call(["fcmKey": targetFcmKey, "body": "\(username) sent you a friend request!"])
+            let _ = try await functions.httpsCallable("notifyIndividual").call(["fcmKey": targetFcmKey, "body": body])
         }
         catch {
             throw error
