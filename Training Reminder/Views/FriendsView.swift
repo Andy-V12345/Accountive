@@ -57,7 +57,7 @@ struct SearchBar: View {
 }
 
 // MARK: PREFERENCE KEY FOR PULL TO REFRESH
-struct ViewOffsetKey: PreferenceKey {
+struct FriendsViewKey: PreferenceKey {
     static var defaultValue: CGFloat = 0
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
         value += nextValue()
@@ -229,7 +229,7 @@ struct FriendsView: View {
                                     let currentScrollViewPosition = -geo.frame(in: .named("scrollview")).origin.y
                                     
                                     if currentScrollViewPosition < -amountBeforeRefreshing && !isRefreshing {
-                                        Color.clear.preference(key: ViewOffsetKey.self, value: -geo.frame(in: .global).origin.y)
+                                        Color.clear.preference(key: FriendsViewKey.self, value: -geo.frame(in: .global).origin.y)
                                     }
                                 })
                                 .opacity(isRefreshing ? 0.3 : 1)
@@ -251,7 +251,7 @@ struct FriendsView: View {
                                     let currentScrollViewPosition = -geo.frame(in: .named("scrollview")).origin.y
                                     
                                     if currentScrollViewPosition < -amountBeforeRefreshing && !isRefreshing {
-                                        Color.clear.preference(key: ViewOffsetKey.self, value: -geo.frame(in: .global).origin.y)
+                                        Color.clear.preference(key: FriendsViewKey.self, value: -geo.frame(in: .global).origin.y)
                                     }
                                 })
                                 .opacity(isRefreshing ? 0.3 : 1)
@@ -303,7 +303,7 @@ struct FriendsView: View {
                                     let currentScrollViewPosition = -geo.frame(in: .named("scrollview")).origin.y
                                     
                                     if currentScrollViewPosition < -amountBeforeRefreshing && !isRefreshing {
-                                        Color.clear.preference(key: ViewOffsetKey.self, value: -geo.frame(in: .global).origin.y)
+                                        Color.clear.preference(key: FriendsViewKey.self, value: -geo.frame(in: .global).origin.y)
                                     }
                                 })
                                 .opacity(isRefreshing ? 0.4 : 1)
@@ -312,7 +312,7 @@ struct FriendsView: View {
                         } //: ScrollView
                         .scrollIndicators(.hidden)
                         .coordinateSpace(name: "scrollview")
-                        .onPreferenceChange(ViewOffsetKey.self) { scrollPosition in
+                        .onPreferenceChange(FriendsViewKey.self) { scrollPosition in
                             if scrollPosition < -amountBeforeRefreshing && !isRefreshing {
                                 isRefreshing = true
                                 Task {
