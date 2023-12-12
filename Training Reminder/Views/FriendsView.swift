@@ -16,6 +16,7 @@ struct SearchBar: View {
     @Binding var text: String
     @State var placeholder: String
     @Binding var showingCancel: Bool
+
     
     var body: some View {
         HStack {
@@ -55,6 +56,14 @@ struct SearchBar: View {
     }
 }
 
+// MARK: PREFERENCE KEY FOR PULL TO REFRESH
+struct ViewOffsetKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value += nextValue()
+    }
+}
+
 // MARK: FRIENDSVIEW
 
 struct FriendsView: View {
@@ -87,6 +96,27 @@ struct FriendsView: View {
     
     @State var errorMsg = ""
     @State var isError = false
+    
+    @Environment(\.refresh) private var refresh
+    @State private var isRefreshing = false
+    let amountBeforeRefreshing: CGFloat = 150
+    @State private var offset: CGFloat? = nil
+    
+    // MARK: LOADFRIENDS()
+    
+    private func loadFriends() async {
+        isLoading = true
+        do {
+            friends = try await firebaseService.getFriends(uid: authState.user!.uid)
+            isLoading = false
+        }
+        catch {
+            errorMsg = "Error loading friends"
+            isError = true
+            isLoading = false
+        }
+    }
+    
     
     var body: some View {
         GeometryReader { screen in
@@ -173,67 +203,84 @@ struct FriendsView: View {
                     
                     // MARK: FRIENDS DISPLAY
                     
-                    if isLoading {
-                        VStack {
-                            Spacer()
-                            ProgressView()
-                                .tint(Color(hex: "A6AEF0"))
-                                .frame(width: 300)
-                                .controlSize(.regular)
-                            Spacer()
-                        }
-                        .padding(.bottom, 70)
-                    }
-                    else if queryRes.isEmpty && friends.isEmpty {
-                        VStack {
-                            Spacer()
-                            
-                            Text("Add some friends!")
-                                .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
-                                .italic()
-                            
-                            Spacer()
-                        }
-                        .padding(.bottom, 70)
-                    }
-                    else if !doesHaveFriends && queryRes.isEmpty {
-                        VStack {
-                            Spacer()
-                            
-                            Text("No user found!")
-                                .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
-                                .italic()
-                            
-                            Spacer()
-                        }
-                        .padding(.bottom, 70)
-                    }
-                    else {
+                    GeometryReader { scrollgeo in
                         ScrollView() {
-                            VStack(spacing: 0) {
-                                if !friends.isEmpty {
-                                    if doesHaveFriends {
-                                        Text("YOUR FRIENDS")
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
-                                            .bold()
-                                        LazyVStack(spacing: 0) {
-                                            ForEach(0..<friends.count, id:\.self) { i in
-                                                if searchQuery == "" {
-                                                    FriendPanel(friend: $friends[i], isFriend: true, deleteIndex: $deleteUid, isConfirmingDelete: $isConfirmingDelete, friendBeingDeleted: $friendBeingRemoved)
-                                                        .environmentObject(authState)
+                            if isLoading && !isRefreshing {
+                                VStack {
+                                    Spacer()
+                                    ProgressView()
+                                        .tint(Color(hex: "A6AEF0"))
+                                        .frame(width: 300)
+                                        .controlSize(.regular)
+                                    Spacer()
+                                }
+                                .frame(width: scrollgeo.size.width)
+                                .frame(minHeight: scrollgeo.size.height - 100)
+                            }
+                            else if queryRes.isEmpty && friends.isEmpty && searchQuery == "" {
+                                VStack {
+                                    Text("Add some friends!")
+                                        .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
+                                        .italic()
+                                }
+                                .frame(width: scrollgeo.size.width)
+                                .frame(minHeight: scrollgeo.size.height - 100)
+                                .overlay(GeometryReader { geo in
+                                    let currentScrollViewPosition = -geo.frame(in: .named("scrollview")).origin.y
+                                    
+                                    if currentScrollViewPosition < -amountBeforeRefreshing && !isRefreshing {
+                                        Color.clear.preference(key: ViewOffsetKey.self, value: -geo.frame(in: .global).origin.y)
+                                    }
+                                })
+                                .opacity(isRefreshing ? 0.3 : 1)
+                                
+                            }
+                            else if !doesHaveFriends && queryRes.isEmpty && searchQuery != "" {
+                                VStack {
+                                    Spacer()
+                                    
+                                    Text("No user found!")
+                                        .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
+                                        .italic()
+                                    
+                                    Spacer()
+                                }
+                                .frame(width: scrollgeo.size.width)
+                                .frame(minHeight: scrollgeo.size.height - 100)
+                                .overlay(GeometryReader { geo in
+                                    let currentScrollViewPosition = -geo.frame(in: .named("scrollview")).origin.y
+                                    
+                                    if currentScrollViewPosition < -amountBeforeRefreshing && !isRefreshing {
+                                        Color.clear.preference(key: ViewOffsetKey.self, value: -geo.frame(in: .global).origin.y)
+                                    }
+                                })
+                                .opacity(isRefreshing ? 0.3 : 1)
+                            }
+                            else {
+                                VStack(spacing: 0) {
+                                    if !friends.isEmpty {
+                                        if doesHaveFriends {
+                                            Text("YOUR FRIENDS")
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
+                                                .bold()
+                                            LazyVStack(spacing: 0) {
+                                                ForEach(0..<friends.count, id:\.self) { i in
+                                                    if searchQuery == "" {
+                                                        FriendPanel(friend: $friends[i], isFriend: true, deleteIndex: $deleteUid, isConfirmingDelete: $isConfirmingDelete, friendBeingDeleted: $friendBeingRemoved)
+                                                            .environmentObject(authState)
+                                                    }
+                                                    else if searchQuery != "" && friends[i].username.hasPrefix(searchQuery) {
+                                                        FriendPanel(friend: $friends[i], isFriend: true, deleteIndex: $deleteUid, isConfirmingDelete: $isConfirmingDelete, friendBeingDeleted: $friendBeingRemoved)
+                                                            .environmentObject(authState)
+                                                    }
+                                                    
                                                 }
-                                                else if searchQuery != "" && friends[i].username.hasPrefix(searchQuery) {
-                                                    FriendPanel(friend: $friends[i], isFriend: true, deleteIndex: $deleteUid, isConfirmingDelete: $isConfirmingDelete, friendBeingDeleted: $friendBeingRemoved)
-                                                        .environmentObject(authState)
-                                                }
-                                                
                                             }
                                         }
                                     }
-                                }
-                                
-                                if !queryRes.isEmpty {
+                                    
+                                    if !queryRes.isEmpty {
                                         Text("RESULTS")
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                             .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
@@ -249,12 +296,44 @@ struct FriendsView: View {
                                                 }
                                             }
                                         }
-                                }
-                            } //: VStack
-                            .padding(.bottom, 70)
+                                    }
+                                } //: VStack
+                                .padding(.bottom, 70)
+                                .overlay(GeometryReader { geo in
+                                    let currentScrollViewPosition = -geo.frame(in: .named("scrollview")).origin.y
+                                    
+                                    if currentScrollViewPosition < -amountBeforeRefreshing && !isRefreshing {
+                                        Color.clear.preference(key: ViewOffsetKey.self, value: -geo.frame(in: .global).origin.y)
+                                    }
+                                })
+                                .opacity(isRefreshing ? 0.4 : 1)
+                            }
+                            
                         } //: ScrollView
                         .scrollIndicators(.hidden)
-                        
+                        .coordinateSpace(name: "scrollview")
+                        .onPreferenceChange(ViewOffsetKey.self) { scrollPosition in
+                            if scrollPosition < -amountBeforeRefreshing && !isRefreshing {
+                                isRefreshing = true
+                                Task {
+                                    await loadFriends()
+                                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                                    await MainActor.run {
+                                        isRefreshing = false
+                                    }
+                                }
+                            }
+                        }
+                        .overlay(
+                            isRefreshing ?
+                            ProgressView()
+                                .tint(Color(hex: "A6AEF0"))
+                                .frame(width: 300)
+                                .controlSize(.regular)
+                                .offset(y: -50)
+                            :
+                                nil
+                            , alignment: .center)
                     }
                     
                     Spacer()
@@ -286,18 +365,9 @@ struct FriendsView: View {
             }
             .onAppear {
                 Task {
-                    isLoading = true
-                    do {
-                        friends = try await firebaseService.getFriends(uid: authState.user!.uid)
-                        doesHaveFriends = friends.count > 0
-                        isLoading = false
-                    }
-                    catch {
-                        errorMsg = "Error loading friends"
-                        isError = true
-                    }
+                    await loadFriends()
+                    doesHaveFriends = friends.count > 0
                 }
-                
             }
             .ignoresSafeArea(edges: [.bottom, .leading, .trailing])
             .alert("Are You Sure?", isPresented: $isConfirmingDelete, presenting: "Are you sure you want to unfriend \(friendBeingRemoved?.username ?? "")? You won't be notified when they've completed a task.") { details in

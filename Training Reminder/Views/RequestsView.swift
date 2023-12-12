@@ -30,6 +30,40 @@ struct RequestsView: View {
     @State var errorMsg = ""
     @State var isError = false
     
+    private func loadRequests() async {
+        do {
+            withAnimation(.spring()) {
+                isLoading = true
+            }
+            
+            let friendReqRes = try await firebaseService.getFriendReq(uid: authState.user!.uid) as? [String: [String: String]] ?? [:]
+            let pendingReqRes = try await firebaseService.getPendingReq(uid: authState.user!.uid) as? [String: [String: String]] ?? [:]
+            
+            if friendReqRes != [:] {
+                
+                for (uid, data) in friendReqRes {
+                    friendReq.append(Friend(uid: uid, name: data["name"]!, username: data["username"]!, status: data["status"]!))
+                }
+            }
+            
+            if pendingReqRes != [:] {
+                
+                for (uid, data) in pendingReqRes {
+                    pendingReq.append(Friend(uid: uid, name: data["name"]!, username: data["username"]!, status: data["status"]!))
+                }
+            }
+            
+            withAnimation(.spring()) {
+                isLoading = false
+            }
+            
+        }
+        catch {
+            errorMsg = "Error loading friend requests"
+            isError = true
+        }
+    }
+    
     var body: some View {
         GeometryReader { screen in
             ZStack {
@@ -168,37 +202,7 @@ struct RequestsView: View {
             })
             .onAppear {
                 Task {
-                    do {
-                        withAnimation(.spring()) {
-                            isLoading = true
-                        }
-                        
-                        let friendReqRes = try await firebaseService.getFriendReq(uid: authState.user!.uid) as? [String: [String: String]] ?? [:]
-                        let pendingReqRes = try await firebaseService.getPendingReq(uid: authState.user!.uid) as? [String: [String: String]] ?? [:]
-                        
-                        if friendReqRes != [:] {
-                            
-                            for (uid, data) in friendReqRes {
-                                friendReq.append(Friend(uid: uid, name: data["name"]!, username: data["username"]!, status: data["status"]!))
-                            }
-                        }
-                        
-                        if pendingReqRes != [:] {
-                            
-                            for (uid, data) in pendingReqRes {
-                                pendingReq.append(Friend(uid: uid, name: data["name"]!, username: data["username"]!, status: data["status"]!))
-                            }
-                        }
-                        
-                        withAnimation(.spring()) {
-                            isLoading = false
-                        }
-                        
-                    }
-                    catch {
-                        errorMsg = "Error loading friend requests"
-                        isError = true
-                    }
+                    await loadRequests()
                 }
                 
             }
