@@ -100,7 +100,6 @@ struct FriendsView: View {
     @Environment(\.refresh) private var refresh
     @State private var isRefreshing = false
     let amountBeforeRefreshing: CGFloat = 150
-    @State private var offset: CGFloat? = nil
     
     // MARK: LOADFRIENDS()
     

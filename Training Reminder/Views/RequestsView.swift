@@ -8,6 +8,13 @@
 import SwiftUI
 import AlertToast
 
+struct RequestsViewKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value += nextValue()
+    }
+}
+
 struct RequestsView: View {
     
     var isTesting = false
@@ -30,17 +37,21 @@ struct RequestsView: View {
     @State var errorMsg = ""
     @State var isError = false
     
+    @Environment(\.refresh) private var refresh
+    @State private var isRefreshing = false
+    let amountBeforeRefreshing: CGFloat = 150
+    
     private func loadRequests() async {
         do {
-            withAnimation(.spring()) {
-                isLoading = true
-            }
+            isLoading = true
+            
             
             let friendReqRes = try await firebaseService.getFriendReq(uid: authState.user!.uid) as? [String: [String: String]] ?? [:]
             let pendingReqRes = try await firebaseService.getPendingReq(uid: authState.user!.uid) as? [String: [String: String]] ?? [:]
-            
+                        
             if friendReqRes != [:] {
                 
+                friendReq.removeAll()
                 for (uid, data) in friendReqRes {
                     friendReq.append(Friend(uid: uid, name: data["name"]!, username: data["username"]!, status: data["status"]!))
                 }
@@ -48,14 +59,14 @@ struct RequestsView: View {
             
             if pendingReqRes != [:] {
                 
+                pendingReq.removeAll()
                 for (uid, data) in pendingReqRes {
                     pendingReq.append(Friend(uid: uid, name: data["name"]!, username: data["username"]!, status: data["status"]!))
                 }
             }
             
-            withAnimation(.spring()) {
-                isLoading = false
-            }
+            isLoading = false
+            
             
         }
         catch {
@@ -123,74 +134,185 @@ struct RequestsView: View {
                     .background(LinearGradient(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     
-                    if isLoading {
-                        VStack {
-                            Spacer()
+                    GeometryReader { scrollgeo in
+                        ScrollView() {
+                            if isLoading && !isRefreshing {
+                                VStack {
+                                    Spacer()
+                                    ProgressView()
+                                        .tint(Color(hex: "A6AEF0"))
+                                        .frame(width: 300)
+                                        .controlSize(.large)
+                                    Spacer()
+                                }
+                                .padding(.bottom, 70)
+                            }
+                            else {
+                                if friendReq.isEmpty && pendingReq.isEmpty {
+                                    VStack {
+                                        Spacer()
+                                        Text("Wow, it's empty in here!")
+                                            .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
+                                            .italic()
+                                        Spacer()
+                                    }
+                                    .frame(width: scrollgeo.size.width)
+                                    .frame(minHeight: scrollgeo.size.height - 100)
+                                    .overlay(GeometryReader { geo in
+                                        let currentScrollViewPosition = -geo.frame(in: .named("scrollview2")).origin.y
+                                        
+                                        if currentScrollViewPosition < -amountBeforeRefreshing && !isRefreshing {
+                                            Color.clear.preference(key: FriendsViewKey.self, value: -geo.frame(in: .global).origin.y)
+                                        }
+                                    })
+                                    .opacity(isRefreshing ? 0.2 : 1)
+                                }
+                                else {
+                                    VStack(spacing: 0) {
+                                        if !friendReq.isEmpty {
+                                            Text("FRIEND REQUESTS")
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
+                                                .bold()
+                                            LazyVStack(spacing: 0) {
+                                                ForEach(0..<friendReq.count, id:\.self) { i in
+                                                    FriendRequestPanel(friend: $friendReq[i], deleteIndex: $deleteUid)
+                                                        .environmentObject(authState)
+                                                }
+                                            }
+                                        }
+                                        if !pendingReq.isEmpty {
+                                            Text("YOUR REQUESTS")
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
+                                                .bold()
+                                            LazyVStack(spacing: 0) {
+                                                ForEach(0..<pendingReq.count, id:\.self) { i in
+                                                    RequestPanel(friend: pendingReq[i], reqStatus: $pendingReq[i].status, deleteIndex: $deleteUid)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .padding(.bottom, 70)
+                                    .onChange(of: deleteUid) { value in
+                                        if value != "" {
+                                            friendReq.removeAll { friend in
+                                                friend.uid == value
+                                            }
+                                            
+                                            pendingReq.removeAll { friend in
+                                                friend.uid == value
+                                            }
+                                            
+                                            doesHaveFriendReq = !friendReq.isEmpty && !pendingReq.isEmpty
+                                            
+                                        }
+                                    }
+                                    .overlay(GeometryReader { geo in
+                                        let currentScrollViewPosition = -geo.frame(in: .named("scrollview2")).origin.y
+                                        
+                                        if currentScrollViewPosition < -amountBeforeRefreshing && !isRefreshing {
+                                            Color.clear.preference(key: FriendsViewKey.self, value: -geo.frame(in: .global).origin.y)
+                                        }
+                                    })
+                                    .opacity(isRefreshing ? 0.3 : 1)
+                                }
+                            }
+                        } //: ScrollView
+                        .scrollIndicators(.hidden)
+                        .coordinateSpace(name: "scrollview2")
+                        .onPreferenceChange(FriendsViewKey.self) { scrollPosition in
+                            if scrollPosition < -amountBeforeRefreshing && !isRefreshing {
+                                isRefreshing = true
+                                Task {
+                                    await loadRequests()
+                                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                                    await MainActor.run {
+                                        isRefreshing = false
+                                    }
+                                }
+                            }
+                        }
+                        .overlay(
+                            isRefreshing ?
                             ProgressView()
                                 .tint(Color(hex: "A6AEF0"))
                                 .frame(width: 300)
-                                .controlSize(.large)
-                            Spacer()
-                        }
-                        .padding(.bottom, 70)
+                                .controlSize(.regular)
+                                .offset(y: -50)
+                            :
+                                nil
+                            , alignment: .center)
                     }
-                    else {
-                        if friendReq.isEmpty && pendingReq.isEmpty {
-                            VStack {
-                                Spacer()
-                                Text("Wow, it's empty in here!")
-                                    .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
-                                    .italic()
-                                Spacer()
-                            }
-                            .padding(.bottom, 70)
-                        }
-                        else {
-                            ScrollView() {
-                                VStack(spacing: 0) {
-                                    if !friendReq.isEmpty {
-                                        Text("FRIEND REQUESTS")
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
-                                            .bold()
-                                        LazyVStack(spacing: 0) {
-                                            ForEach(0..<friendReq.count, id:\.self) { i in
-                                                FriendRequestPanel(friend: $friendReq[i], deleteIndex: $deleteUid)
-                                                    .environmentObject(authState)
-                                            }
-                                        }
-                                    }
-                                    if !pendingReq.isEmpty {
-                                        Text("YOUR REQUESTS")
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
-                                            .bold()
-                                        LazyVStack(spacing: 0) {
-                                            ForEach(0..<pendingReq.count, id:\.self) { i in
-                                                RequestPanel(friend: pendingReq[i], reqStatus: $pendingReq[i].status, deleteIndex: $deleteUid)
-                                            }
-                                        }
-                                    }
-                                }
-                                .padding(.bottom, 70)
-                                .onChange(of: deleteUid) { value in
-                                    if value != "" {
-                                        friendReq.removeAll { friend in
-                                            friend.uid == value
-                                        }
-                                        
-                                        pendingReq.removeAll { friend in
-                                            friend.uid == value
-                                        }
-                                        
-                                        doesHaveFriendReq = !friendReq.isEmpty && !pendingReq.isEmpty
-                                        
-                                    }
-                                }
-                            } //: ScrollView
-                            .scrollIndicators(.hidden)
-                        }
-                    }
+                    
+//                    if isLoading {
+//                        VStack {
+//                            Spacer()
+//                            ProgressView()
+//                                .tint(Color(hex: "A6AEF0"))
+//                                .frame(width: 300)
+//                                .controlSize(.large)
+//                            Spacer()
+//                        }
+//                        .padding(.bottom, 70)
+//                    }
+//                    else {
+//                        if friendReq.isEmpty && pendingReq.isEmpty {
+//                            VStack {
+//                                Spacer()
+//                                Text("Wow, it's empty in here!")
+//                                    .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
+//                                    .italic()
+//                                Spacer()
+//                            }
+//                            .padding(.bottom, 70)
+//                        }
+//                        else {
+//                            ScrollView() {
+//                                VStack(spacing: 0) {
+//                                    if !friendReq.isEmpty {
+//                                        Text("FRIEND REQUESTS")
+//                                            .frame(maxWidth: .infinity, alignment: .leading)
+//                                            .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
+//                                            .bold()
+//                                        LazyVStack(spacing: 0) {
+//                                            ForEach(0..<friendReq.count, id:\.self) { i in
+//                                                FriendRequestPanel(friend: $friendReq[i], deleteIndex: $deleteUid)
+//                                                    .environmentObject(authState)
+//                                            }
+//                                        }
+//                                    }
+//                                    if !pendingReq.isEmpty {
+//                                        Text("YOUR REQUESTS")
+//                                            .frame(maxWidth: .infinity, alignment: .leading)
+//                                            .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
+//                                            .bold()
+//                                        LazyVStack(spacing: 0) {
+//                                            ForEach(0..<pendingReq.count, id:\.self) { i in
+//                                                RequestPanel(friend: pendingReq[i], reqStatus: $pendingReq[i].status, deleteIndex: $deleteUid)
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                                .padding(.bottom, 70)
+//                                .onChange(of: deleteUid) { value in
+//                                    if value != "" {
+//                                        friendReq.removeAll { friend in
+//                                            friend.uid == value
+//                                        }
+//                                        
+//                                        pendingReq.removeAll { friend in
+//                                            friend.uid == value
+//                                        }
+//                                        
+//                                        doesHaveFriendReq = !friendReq.isEmpty && !pendingReq.isEmpty
+//                                        
+//                                    }
+//                                }
+//                            } //: ScrollView
+//                            .scrollIndicators(.hidden)
+//                        }
+//                    }
                     
                     Spacer()
                 }

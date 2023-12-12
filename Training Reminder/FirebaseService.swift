@@ -156,7 +156,7 @@ class FirebaseService {
     // MARK: GET FRIEND REQUESTS
     func getFriendReq(uid: String) async throws -> [String: Any] {
         let ref = self.db.collection("requests").document(uid)
-        
+                
         do {
             let doc = try await ref.getDocument()
             if doc.exists {
