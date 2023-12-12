@@ -196,7 +196,7 @@ struct FriendsView: View {
                         }
                         .padding(.bottom, 70)
                     }
-                    else if !doesHaveFriends {
+                    else if !doesHaveFriends && queryRes.isEmpty {
                         VStack {
                             Spacer()
                             
@@ -274,7 +274,7 @@ struct FriendsView: View {
                         let filtered = friends.first(where: { friend in
                             friend.username.hasPrefix(searchQuery)
                         })
-                        
+                                                
                         doesHaveFriends = filtered != nil
                         isLoading = false
                     }
@@ -289,7 +289,7 @@ struct FriendsView: View {
                     isLoading = true
                     do {
                         friends = try await firebaseService.getFriends(uid: authState.user!.uid)
-                        doesHaveFriends = true
+                        doesHaveFriends = friends.count > 0
                         isLoading = false
                     }
                     catch {
