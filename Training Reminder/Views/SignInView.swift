@@ -143,16 +143,12 @@ struct SignInView: View {
     // MARK: CHECK IF USERNAME IS TAKEN
     
     private func isUsernameTaken(input: String) async -> Bool {
-        let usernameRef = db.collection("usernames")
-        
         do {
-            let querySnapshot = try await usernameRef.whereField("username", isEqualTo: input).getDocuments()
-            if querySnapshot.documents.count > 0 {
+            let doc = try await db.collection("usernames").document(input).getDocument()
+            if doc.exists {
                 return true
             }
-            else {
-                return false
-            }
+            return false
         }
         catch {
             return true
