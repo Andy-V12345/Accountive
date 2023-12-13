@@ -16,6 +16,8 @@ enum AuthenticationState {
 class AuthState: ObservableObject {
     @Published var value: AuthenticationState = .undefined
     @Published var user: User? = nil
+    @Published var doneAuth: Bool? = nil
+    
     private var username = ""
     
     init() {
@@ -109,6 +111,7 @@ class AuthState: ObservableObject {
     
     @MainActor
     func logout() throws {
+        self.doneAuth = nil
         try Auth.auth().signOut()
     }
     

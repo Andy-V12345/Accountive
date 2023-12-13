@@ -182,10 +182,11 @@ struct SignInView: View {
     func signUp() async {
         do {
             isLoading = true
+            authState.doneAuth = false
             authState.setUsername(username: usernameObject.text)
-            print(authState.getUsername())
             try await authState.signUp(email: emailObject.text, password: passwordObject.text, name: nameObject.text.trimmingCharacters(in: .whitespacesAndNewlines))
             firebaseService.addUser(email: emailObject.text, username: usernameObject.text, uid: authState.user!.uid, fcmToken: UserDefaults.standard.string(forKey: "fcmKey")!, name: nameObject.text)
+            authState.doneAuth = true
             isLoading = false
         }
         catch {

@@ -21,14 +21,25 @@ struct ContentView: View {
             if network.connected {
                 if authState.value == .undefined {
                     ProgressView()
+                        .tint(Color(hex: "A6AEF0"))
+                        .frame(width: 300)
+                        .controlSize(.regular)
                 }
                 else if authState.value == .notAuthorized {
                     SignInView()
                         .environmentObject(authState)
                 }
                 else {
-                    HomeView()
-                        .environmentObject(authState)
+                    if authState.doneAuth == nil || authState.doneAuth! {
+                        HomeView()
+                            .environmentObject(authState)
+                    }
+                    else {
+                        ProgressView()
+                            .tint(Color(hex: "A6AEF0"))
+                            .frame(width: 300)
+                            .controlSize(.regular)
+                    }
                 }
             }
             else {
@@ -59,6 +70,7 @@ struct ContentView: View {
                 }
             }
         }
+        
     }
 }
 

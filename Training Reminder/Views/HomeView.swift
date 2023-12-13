@@ -15,8 +15,6 @@ import FirebaseFirestore
 
 struct HomeView: View {
     
-    //    [Activity(name: "Run", description: "fafa"), Activity(name: "Eat", description: "fafa"), Activity(name: "Work", description: "fafa")]
-    
     // MARK: Properties
     @State var isLoading = true
     @State var dayIndex: Int = Calendar.current.component(.weekday, from: Date())
@@ -73,6 +71,7 @@ struct HomeView: View {
                     isLoading = true
                 }
             }
+            
             dayIndex = Calendar.current.component(.weekday, from: Date())
             isDeleting = nil
             isDeleted = nil
@@ -85,7 +84,7 @@ struct HomeView: View {
             if authState.getUsername() == "" {
                 authState.setUsername(username: try await firebaseService.getUsername(uid: authState.user!.uid))
             }
-            
+                        
             hasShownInstructions = try await firebaseService.getHasShownInstructions(uid: authState.user!.uid)
                         
             withAnimation(.spring()) {
