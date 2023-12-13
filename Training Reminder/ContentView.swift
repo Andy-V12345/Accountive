@@ -70,6 +70,9 @@ struct ContentView: View {
                 }
             }
         }
+        .onAppear {
+            print("h")
+        }
         
     }
 }

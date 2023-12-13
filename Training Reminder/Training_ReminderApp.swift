@@ -112,12 +112,6 @@ struct Training_ReminderApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     var body: some Scene {
         WindowGroup {
-            //            if UserDefaults.standard.bool(forKey: "isSetUp") {
-            //                ContentView()
-            //            }
-            //            else {
-            //                InitialView()
-            //            }
             ContentView()
         }
     }
