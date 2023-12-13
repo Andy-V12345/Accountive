@@ -267,7 +267,8 @@ class FirebaseService {
         
         Task {
             do {
-                try await self.notifyIndividual(targetFcmKey: friendToAdd.uid, body: "\(friendToAdd.username) accepted your friend request!")
+                let friendFcmToken = try await self.getFcmTokenOfFriend(friendUid: friendToAdd.uid)
+                try await self.notifyIndividual(targetFcmKey: friendFcmToken, body: "\(username) accepted your friend request!")
             }
             catch {
                 throw error
@@ -645,6 +646,10 @@ class FirebaseService {
             "daysSubscribed": [],
             "hasShownInstructions": false
         ], merge: true)
+        
+        let usernamesRef = db.collection("usernames")
+        let usernameDoc = usernamesRef.document(username)
+        usernameDoc.setData([:])
     }
     
     func getHasShownInstructions(uid: String) async throws -> Bool {

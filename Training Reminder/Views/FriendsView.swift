@@ -116,6 +116,26 @@ struct FriendsView: View {
         }
     }
     
+    // MARK: LOADQUERY()
+    
+    private func loadQuery() async {
+        isLoading = true
+        do {
+            queryRes = try await firebaseService.filterUsernames(uid: authState.user!.uid, query: searchQuery, currentUsername: authState.getUsername())
+            
+            let filtered = friends.first(where: { friend in
+                friend.username.hasPrefix(searchQuery)
+            })
+                                    
+            doesHaveFriends = filtered != nil
+            isLoading = false
+        }
+        catch {
+            errorMsg = "Error loading results"
+            isError = true
+        }
+    }
+    
     
     var body: some View {
         GeometryReader { screen in
@@ -315,8 +335,11 @@ struct FriendsView: View {
                             if scrollPosition < -amountBeforeRefreshing && !isRefreshing {
                                 isRefreshing = true
                                 Task {
+                                    try? await Task.sleep(nanoseconds: 500_000_000)
+                                    
                                     await loadFriends()
-                                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                                    await loadQuery()
+                                    
                                     await MainActor.run {
                                         isRefreshing = false
                                     }
@@ -345,21 +368,7 @@ struct FriendsView: View {
             })
             .onChange(of: searchQuery) { _ in
                 Task {
-                    isLoading = true
-                    do {
-                        queryRes = try await firebaseService.filterUsernames(uid: authState.user!.uid, query: searchQuery, currentUsername: authState.getUsername())
-                        
-                        let filtered = friends.first(where: { friend in
-                            friend.username.hasPrefix(searchQuery)
-                        })
-                                                
-                        doesHaveFriends = filtered != nil
-                        isLoading = false
-                    }
-                    catch {
-                        errorMsg = "Error loading results"
-                        isError = true
-                    }
+                    await loadQuery()
                 }
             }
             .onAppear {

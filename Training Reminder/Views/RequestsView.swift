@@ -45,21 +45,20 @@ struct RequestsView: View {
         do {
             isLoading = true
             
+            friendReq.removeAll()
+            pendingReq.removeAll()
             
             let friendReqRes = try await firebaseService.getFriendReq(uid: authState.user!.uid) as? [String: [String: String]] ?? [:]
             let pendingReqRes = try await firebaseService.getPendingReq(uid: authState.user!.uid) as? [String: [String: String]] ?? [:]
+            
                         
             if friendReqRes != [:] {
-                
-                friendReq.removeAll()
                 for (uid, data) in friendReqRes {
                     friendReq.append(Friend(uid: uid, name: data["name"]!, username: data["username"]!, status: data["status"]!))
                 }
             }
             
             if pendingReqRes != [:] {
-                
-                pendingReq.removeAll()
                 for (uid, data) in pendingReqRes {
                     pendingReq.append(Friend(uid: uid, name: data["name"]!, username: data["username"]!, status: data["status"]!))
                 }
@@ -225,8 +224,8 @@ struct RequestsView: View {
                             if scrollPosition < -amountBeforeRefreshing && !isRefreshing {
                                 isRefreshing = true
                                 Task {
+                                    try? await Task.sleep(nanoseconds: 500_000_000)
                                     await loadRequests()
-                                    try? await Task.sleep(nanoseconds: 1_000_000_000)
                                     await MainActor.run {
                                         isRefreshing = false
                                     }
