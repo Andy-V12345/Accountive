@@ -175,6 +175,8 @@ struct SignInView: View {
         }
     }
     
+    // MARK: SIGN UP FUNCTION
+    
     func signUp() async {
         do {
             isLoading = true
