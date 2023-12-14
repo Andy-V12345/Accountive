@@ -23,6 +23,8 @@ struct RequestsView: View {
     
     @Binding var doesHaveFriendReq: Bool
     
+    @Binding var friendReqRes: [String: [String: String]]
+    
     @State var friendReq: [Friend] = []
     @State var pendingReq: [Friend] = []
     
@@ -48,10 +50,8 @@ struct RequestsView: View {
             friendReq.removeAll()
             pendingReq.removeAll()
             
-            let friendReqRes = try await firebaseService.getFriendReq(uid: authState.user!.uid) as? [String: [String: String]] ?? [:]
             let pendingReqRes = try await firebaseService.getPendingReq(uid: authState.user!.uid) as? [String: [String: String]] ?? [:]
             
-                        
             if friendReqRes != [:] {
                 for (uid, data) in friendReqRes {
                     friendReq.append(Friend(uid: uid, name: data["name"]!, username: data["username"]!, status: data["status"]!))

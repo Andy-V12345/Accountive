@@ -16,11 +16,36 @@ struct SocialContainerView: View {
     let firebaseService = FirebaseService()
     
     @State var doesHaveFriendReq = false
+    @State var friendReqRes: [String: [String: String]] = [:]
     
     @Namespace var namespace
     
     @State var errorMsg = ""
     @State var isError = false
+    
+    func realtimeFriendReq(uid: String) {
+        
+        
+        var reqData: [String: [String: String]] = [:]
+        let uidRef = firebaseService.db.collection("requests").document(uid)
+            .addSnapshotListener(includeMetadataChanges: true, listener: { docSnapshot, error in
+                guard let doc = docSnapshot else {
+                    errorMsg = "Error loading friends"
+                    isError = true
+                    return
+                }
+                guard let data = doc.data() else {
+                    return
+                }
+                                
+                reqData = data["friendRequests"] as? [String: [String: String]] ?? [:]
+                
+                friendReqRes = reqData
+                doesHaveFriendReq = !(reqData == [:])
+                
+            })
+        
+    }
     
     var body: some View {
         ZStack() {
@@ -30,7 +55,7 @@ struct SocialContainerView: View {
                     .environmentObject(authState)
             }
             else {
-                RequestsView(doesHaveFriendReq: $doesHaveFriendReq)
+                RequestsView(doesHaveFriendReq: $doesHaveFriendReq, friendReqRes: $friendReqRes)
                     .environmentObject(authState)
             }
             
@@ -82,15 +107,7 @@ struct SocialContainerView: View {
         .padding(.bottom, 20)
         .ignoresSafeArea(edges: [.bottom, .leading, .trailing])
         .onAppear {
-            Task {
-                do {
-                    doesHaveFriendReq = !(try await firebaseService.getFriendReq(uid: authState.user!.uid).isEmpty)
-                }
-                catch {
-                    errorMsg = "Error loading friends"
-                    isError = true
-                }
-            }
+            realtimeFriendReq(uid: authState.user!.uid)
         }
         .toast(isPresenting: $isError, duration: 3, alert: {
             AlertToast(displayMode: .hud, type: .error(Color(hex: "ff5858")), subTitle: errorMsg)
