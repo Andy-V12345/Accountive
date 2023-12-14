@@ -22,17 +22,22 @@ struct FriendPanel: View {
     let firebaseService = FirebaseService()
     
     var body: some View {
-        HStack {
-            VStack {
+        HStack(spacing: 30) {
+            VStack(alignment: .leading) {
                 Text(friend.name)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(alignment: .leading)
                     .font(.title3)
                     .bold()
                 Text(friend.username)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(alignment: .leading)
             }
             
             Spacer()
+            
+            CircleProgressBar(count: friend.doneCount, total: friend.totalCount, progress: friend.totalCount == 0 ? 0 : CGFloat(friend.doneCount) / CGFloat(friend.totalCount), font1: .body.weight(.medium), lineWidth: 4, includeTotal: false)
+                .frame(height: 40)
+            
+            
             
             if !isFriend {
                 Button(action: {
@@ -43,7 +48,8 @@ struct FriendPanel: View {
                         do {
                             let toFcmToken = try await firebaseService.getFcmTokenOfFriend(friendUid: friend.uid)
                             if toFcmToken != "" {
-                                try await firebaseService.notifyIndividual(targetFcmKey: toFcmToken, body: "\(authState.getUsername()) sent you a friend request!")
+                                try await firebaseService.notifyIndividual(targetFcmKey: toFcmToken, body:
+                                "\(authState.getUsername()) sent you a friend request!")
                             }
                         }
                         catch {
@@ -76,6 +82,24 @@ struct FriendPanel: View {
     }
 }
 
+//struct FriendPanelPreview: View {
+//    
+//    @State var friend = Friend(name: "Nam", username: "Nammy", status: "FRIEND", doneCount: 2, totalCount: 3)
+//    @State var friend2 = Friend(name: "Andy", username: "Andy.v123", status: "FRIEND", doneCount: 1, totalCount: 2)
+//    @State var deleteIndex = "fasd"
+//    @State var isDeleting = false
+//    @State var deleteFriend: Friend? = nil
+//    
+//    var body: some View {
+//        VStack {
+//            FriendPanel(friend: $friend, isFriend: true, deleteIndex: $deleteIndex, isConfirmingDelete: $isDeleting, friendBeingDeleted: $deleteFriend)
+//            
+//            FriendPanel(friend: $friend2, isFriend: true, deleteIndex: $deleteIndex, isConfirmingDelete: $isDeleting, friendBeingDeleted: $deleteFriend)
+//        }
+//        .padding(.horizontal, 20)
+//    }
+//}
+//
 //#Preview {
-//    FriendPanel(friend: Friend(name: "Nam", username: "namv123", status: ""), isFriend: false, isRequest: false)
+//    FriendPanelPreview()
 //}

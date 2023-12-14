@@ -81,6 +81,8 @@ struct HomeView: View {
             doneCount = try await firebaseService.getDoneCount(day: days[dayIndex-1], uid: authState.user!.uid)
             totalCount = activities?.count
             
+            firebaseService.updateTotalCount(uid: authState.user!.uid, totalCount: totalCount ?? 0)
+            
             if authState.getUsername() == "" {
                 authState.setUsername(username: try await firebaseService.getUsername(uid: authState.user!.uid))
             }
@@ -173,7 +175,7 @@ struct HomeView: View {
                                         Spacer()
                                         
                                         // MARK: CIRCLE PROGRESS BAR
-                                        CircleProgressBar(count: doneCount!, total: totalCount!, progress: CGFloat(doneCount!) / CGFloat(activities!.count), font1: (screen.size.height < 736 ? Font.system(size: 45, weight: .bold) : nil), font2: (screen.size.height < 736 ? Font.system(size: 20, weight: .bold) : nil), lineWidth: (screen.size.height < 736 ? 12 : nil))
+                                        CircleProgressBar(count: doneCount!, total: totalCount!, progress: CGFloat(doneCount!) / CGFloat(totalCount!), font1: (screen.size.height < 736 ? Font.system(size: 45, weight: .bold) : nil), font2: (screen.size.height < 736 ? Font.system(size: 20, weight: .bold) : nil), lineWidth: (screen.size.height < 736 ? 12 : nil))
                                             .frame(width: screen.size.width * (screen.size.height < 700 ? 0.4 : 0.45))
                                         
                                         Spacer()
@@ -209,7 +211,6 @@ struct HomeView: View {
                                     }
                                         
                                     Spacer()
-                                    
                                     
                                     
                                     // MARK: ITEM LIST
@@ -287,6 +288,7 @@ struct HomeView: View {
                                                                                 
                                                                                 
                                                                                 totalCount = activities!.count
+                                                                                firebaseService.updateTotalCount(uid: authState.user!.uid, totalCount: totalCount ?? 0)
                                                                                 
                                                                                 
                                                                                 if activities!.count == 0 {
@@ -399,6 +401,9 @@ struct HomeView: View {
                     }
                     
                 }
+            }
+            .onChange(of: doneCount) { count in
+                firebaseService.updateDoneCount(uid: authState.user!.uid, doneCount: doneCount ?? 0)
             }
             .onChange(of: scenePhase) { phase in
                 switch phase {

@@ -53,6 +53,8 @@ struct Friend {
     var name: String
     var username: String
     var status: String
+    var doneCount: Int = 0
+    var totalCount: Int = 0
 }
 
 class FirebaseService {
@@ -139,7 +141,9 @@ class FirebaseService {
                 }
                 else {
                     for (uid, data) in friendsData {
-                        ret.append(Friend(uid: uid, name: data["name"]!, username: data["username"]!, status: "FRIEND"))
+                        let doneCount = try await getFriendDoneCount(friendUid: uid)
+                        let totalCount = try await getFriendTotalCount(friendUid: uid)
+                        ret.append(Friend(uid: uid, name: data["name"]!, username: data["username"]!, status: "FRIEND", doneCount: doneCount, totalCount: totalCount))
                     }
                     return ret
                 }
@@ -548,8 +552,50 @@ class FirebaseService {
         }
     }
     
+    // MARK: UPDATE USER TOTAL COUNT
+    func updateTotalCount(uid: String, totalCount: Int) {
+        let uidRef = self.db.collection("/uids").document(uid)
+        
+        uidRef.updateData([
+            "totalCount": totalCount
+        ])
+    }
     
-    // MARK: DONE COUNT
+    // MARK: GET FRIEND TOTAL COUNT
+    func getFriendTotalCount(friendUid: String) async throws -> Int {
+        let uidRef = self.db.collection("/uids").document(friendUid)
+        
+        do {
+            let doc = try await uidRef.getDocument()
+            if doc.exists {
+                return doc.data()!["totalCount"] as? Int ?? 0
+            }
+            return 0
+        }
+        catch {
+            throw error
+        }
+    }
+    
+    // MARK: GET FRIEND DONE COUNT
+    func getFriendDoneCount(friendUid: String) async throws -> Int {
+        let uidRef = self.db.collection("/uids").document(friendUid)
+        
+        do {
+            let doc = try await uidRef.getDocument()
+            if doc.exists {
+                return doc.data()!["doneCount"] as? Int ?? 0
+            }
+            
+            return 0
+        }
+        catch {
+            throw error
+        }
+    }
+    
+    
+    // MARK: GET USER DONE COUNT
     func getDoneCount(day: String, uid: String) async throws -> Int {
         let collectionRef = self.db.collection("/uids/\(uid)/activities")
         do {
@@ -559,6 +605,15 @@ class FirebaseService {
         catch {
             throw error
         }
+    }
+    
+    // MARK: UPDATE DONE COUNT IN DATABASE
+    func updateDoneCount(uid: String, doneCount: Int) {
+        let uidRef = self.db.collection("/uids").document(uid)
+        
+        uidRef.updateData([
+            "doneCount": doneCount
+        ])
     }
     
     

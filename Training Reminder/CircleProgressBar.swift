@@ -15,6 +15,7 @@ struct CircleProgressBar: View {
     var font1: Font?
     var font2: Font?
     var lineWidth: CGFloat?
+    var includeTotal: Bool?
     
     let animation = Animation
             .easeInOut(duration: 1)
@@ -39,10 +40,12 @@ struct CircleProgressBar: View {
                 Text(String(count))
                     .font(font1 ?? Font.system(size: 50, weight: .bold))
                     .foregroundColor(.black)
-                    
-                Text("/ \(total)")
-                    .font(font2 ?? Font.system(size: 25, weight: .bold))
-                    .foregroundColor(.gray)
+                
+                if includeTotal ?? true {
+                    Text("/ \(total)")
+                        .font(font2 ?? Font.system(size: 25, weight: .bold))
+                        .foregroundColor(.gray)
+                }
             }
         }
 //        .animation(animation, value: progress)
