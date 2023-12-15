@@ -34,10 +34,12 @@ struct FriendPanel: View {
             
             Spacer()
             
-            CircleProgressBar(count: friend.doneCount, total: friend.totalCount, progress: friend.totalCount == 0 ? 0 : CGFloat(friend.doneCount) / CGFloat(friend.totalCount), font1: .body.weight(.medium), lineWidth: 4, includeTotal: false)
-                .frame(height: 40)
-            
-            
+            if isFriend {
+                
+                CircleProgressBar(count: friend.doneCount, total: friend.totalCount, progress: friend.totalCount == 0 ? 0 : CGFloat(friend.doneCount) / CGFloat(friend.totalCount), font1: .body.weight(.medium), lineWidth: 4, includeTotal: false)
+                    .frame(height: 40)
+                
+            }
             
             if !isFriend {
                 Button(action: {
