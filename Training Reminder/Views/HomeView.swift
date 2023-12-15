@@ -219,7 +219,7 @@ struct HomeView: View {
                                         VStack(spacing: 15) {
                                             ForEach(Array(activities!.enumerated()), id:\.element) { offset, activity in
                                                 ZStack {
-                                                    ActivityLabel(activity: activities![offset], doneCount: $doneCount, allDone: $allDone, totalCount: totalCount!, isDeleting: $isDeleting, isDeleted: $isDeleted, changeHeight: $changeHeight, deleteIndex: $deleteIndex, updatingViews: $updatingLabels)
+                                                    ActivityLabel(activity: activities![offset], doneCount: $doneCount, allDone: $allDone, totalCount: totalCount!, isDeleting: $isDeleting, changeHeight: $changeHeight, deleteIndex: $deleteIndex, updatingViews: $updatingLabels)
                                                         .environmentObject(authState)
                                                         .opacity(isDeleting == activity.id ? 0 : 1)
                                                     

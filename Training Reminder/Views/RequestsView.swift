@@ -16,9 +16,7 @@ struct RequestsViewKey: PreferenceKey {
 }
 
 struct RequestsView: View {
-    
-    var isTesting = false
-    
+        
     @Environment(\.dismiss) var dismiss
     
     @Binding var doesHaveFriendReq: Bool
@@ -41,7 +39,7 @@ struct RequestsView: View {
     
     @Environment(\.refresh) private var refresh
     @State private var isRefreshing = false
-    let amountBeforeRefreshing: CGFloat = 150
+    let amountBeforeRefreshing: CGFloat = 125
     
     private func loadRequests() async {
         do {
@@ -79,60 +77,6 @@ struct RequestsView: View {
             ZStack {
                 Color.white.ignoresSafeArea()
                 VStack(spacing: 15) {
-                    HStack {
-                        Image(systemName: "arrow.right")
-                            .hidden()
-                        Spacer()
-
-                        Text("ACCOUNTIVE")
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
-                            .font(.system(size: 30))
-                            .fontWidth(.condensed)
-                            .bold()
-
-                        Spacer()
-
-                        Button(action: {
-                            AppState.shared.showSocial = false
-                            dismiss()
-                        }, label: {
-                            Image(systemName: "xmark")
-                                .font(.title3)
-                                .foregroundColor(.black)
-                        })
-                    } //: Header HStack
-                    
-                    // MARK: ACCOUNT PANEL
-                    HStack {
-                        VStack {
-                            Text("Share your username")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .bold()
-                                .font(.body)
-                                .foregroundColor(.white)
-                            Text(isTesting ? "Andy Vu" : authState.user?.displayName ?? "")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .bold()
-                                .font(.title)
-                                .foregroundColor(.white)
-                            Text(isTesting ? "Andy.V" : authState.getUsername())
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .font(.subheadline)
-                                .foregroundColor(.white)
-                        }
-                        
-                        Spacer()
-                        
-                        ShareLink("", item: "Add me on Accountive (https://apps.apple.com/app/accountive/id6468552927)! My username: \(authState.getUsername())")
-                            .foregroundColor(.white)
-                            .font(.title3)
-                        
-                    }
-                    .padding()
-                    .background(LinearGradient(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing))
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    
                     GeometryReader { scrollgeo in
                         ScrollView() {
                             if isLoading && !isRefreshing {
@@ -316,8 +260,6 @@ struct RequestsView: View {
                     Spacer()
                 }
             } //: Parent ZStack
-            .padding(.top, 10)
-            .padding(.horizontal, 20)
             .toast(isPresenting: $isError, duration: 3, alert: {
                 AlertToast(displayMode: .hud, type: .error(Color(hex: "ff5858")), subTitle: errorMsg)
             })

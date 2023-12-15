@@ -18,7 +18,6 @@ struct ActivityLabel: View {
     @State var totalCount: Int
     
     @Binding var isDeleting: String?
-    @Binding var isDeleted: String?
     @Binding var changeHeight: String?
     @Binding var deleteIndex: Int?
     
@@ -121,8 +120,6 @@ struct ActivityLabel: View {
                     .accentColor(.black)
                     
                     Button(action: {
-                        //TODO: UPDATE ACTIVITY FOR CURRENT DAY
-                        
                         withAnimation(.spring(duration: 0.4, bounce: 0.3)) {
                             updatingViews += 1
                         }
