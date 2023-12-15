@@ -313,6 +313,9 @@ struct AddingGroupView: View {
             .toast(isPresenting: $isError, duration: 3, alert: {
                 AlertToast(displayMode: .hud, type: .error(Color(hex: "ff5858")), subTitle: errorMsg)
             })
+            .onTapGesture {
+                hideKeyboard()
+            }
         }
     }
 }
