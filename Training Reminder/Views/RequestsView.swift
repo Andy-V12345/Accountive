@@ -41,7 +41,7 @@ struct RequestsView: View {
     
     @Environment(\.refresh) private var refresh
     @State private var isRefreshing = false
-    let amountBeforeRefreshing: CGFloat = 150
+    let amountBeforeRefreshing: CGFloat = 125
     
     private func loadRequests() async {
         do {
