@@ -11,6 +11,9 @@ import AlertToast
 struct SocialContainerView: View {
     
     @State var isFriendsView: Bool = !(AppState.shared.showSocial)
+    @State var isRequestsView = AppState.shared.showSocial
+    @State var isGroupsView = false
+    
     @EnvironmentObject var authState: AuthState
     
     let firebaseService = FirebaseService()
@@ -80,43 +83,50 @@ struct SocialContainerView: View {
                     })
                 } //: Header HStack
                 
-                // MARK: ACCOUNT PANEL
-                HStack {
-                    VStack {
-                        Text("Share your username")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .bold()
-                            .font(.body)
-                            .foregroundColor(.white)
-                        Text(isTesting ? "Andy Vu" : authState.user?.displayName ?? "")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .bold()
-                            .font(.title)
-                            .foregroundColor(.white)
-                        Text(isTesting ? "Andy.V" : authState.getUsername())
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .font(.subheadline)
-                            .foregroundColor(.white)
-                    }
+                if !isGroupsView {
                     
-                    Spacer()
-                    
-                    ShareLink("", item: "Add me on Accountive (https://apps.apple.com/app/accountive/id6468552927)! My username: \(authState.getUsername())")
-                        .foregroundColor(.white)
-                        .font(.title3)
+                    // MARK: ACCOUNT PANEL
+                    HStack {
+                        VStack {
+                            Text("Share your username")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .bold()
+                                .font(.body)
+                                .foregroundColor(.white)
+                            Text(isTesting ? "Andy Vu" : authState.user?.displayName ?? "")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .bold()
+                                .font(.title)
+                                .foregroundColor(.white)
+                            Text(isTesting ? "Andy.V" : authState.getUsername())
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .font(.subheadline)
+                                .foregroundColor(.white)
+                        }
                         
+                        Spacer()
+                        
+                        ShareLink("", item: "Add me on Accountive (https://apps.apple.com/app/accountive/id6468552927)! My username: \(authState.getUsername())")
+                            .foregroundColor(.white)
+                            .font(.title3)
+                        
+                    }
+                    .padding()
+                    .background(LinearGradient(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
-                .padding()
-                .background(LinearGradient(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
                 
                 if isFriendsView {
                     FriendsView()
                         .frame(maxHeight: .infinity)
                         .environmentObject(authState)
                 }
-                else {
+                else if isRequestsView {
                     RequestsView(doesHaveFriendReq: $doesHaveFriendReq, friendReqRes: $friendReqRes)
+                        .environmentObject(authState)
+                }
+                else if isGroupsView {
+                    GroupsView()
                         .environmentObject(authState)
                 }
             }
@@ -125,29 +135,35 @@ struct SocialContainerView: View {
             
             VStack {
                 Spacer()
-                HStack(spacing: 20) {
+                HStack(spacing: 10) {
                     Text("Friends")
                         .foregroundStyle(isFriendsView ? .black : .white)
+                        .font(.subheadline)
                         .bold()
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 15)
                         .padding(.vertical, 6)
                         .background(isFriendsView ? .white : .clear)
                         .clipShape(Capsule())
                         .onTapGesture {
                             withAnimation(.spring()) {
                                 isFriendsView = true
+                                isGroupsView = false
+                                isRequestsView = false
                             }
                         }
                     
                     Text("Requests")
-                        .foregroundStyle(isFriendsView ? .white : .black)
+                        .foregroundStyle(isRequestsView ? .black : .white)
+                        .font(.subheadline)
                         .bold()
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 15)
                         .padding(.vertical, 6)
-                        .background(isFriendsView ? .clear : .white)
+                        .background(isRequestsView ? .white : .clear)
                         .clipShape(Capsule())
                         .onTapGesture {
                             withAnimation(.spring()) {
+                                isRequestsView = true
+                                isGroupsView = false
                                 isFriendsView = false
                             }
                         }
@@ -155,10 +171,27 @@ struct SocialContainerView: View {
                             if doesHaveFriendReq {
                                 Circle()
                                     .fill(.red)
-                                    .frame(width: 8)
-                                    .offset(x: -12, y: 7)
+                                    .frame(width: 6)
+                                    .offset(x: -9, y: 8)
                             }
                         })
+                    
+                    Text("Groups")
+                        .foregroundStyle(isGroupsView ? .black : .white)
+                        .font(.subheadline)
+                        .bold()
+                        .padding(.horizontal, 15)
+                        .padding(.vertical, 6)
+                        .background(isGroupsView ? .white : .clear)
+                        .clipShape(Capsule())
+                        .onTapGesture {
+                            withAnimation(.spring()) {
+                                isGroupsView = true
+                                isFriendsView = false
+                                isRequestsView = false
+                            }
+                        }
+                    
                 } //: HStack
                 .padding(.vertical, 10)
                 .padding(.horizontal, 10)
@@ -180,11 +213,5 @@ struct SocialContainerView: View {
             hideKeyboard()
         }
         
-    }
-}
-
-struct SocialContainerPreview: PreviewProvider {
-    static var previews: some View {
-        SocialContainerView(isFriendsView: true)
     }
 }

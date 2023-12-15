@@ -45,6 +45,9 @@
 		D86C49AF2ABC95860084748B /* RequestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86C49AE2ABC95860084748B /* RequestsView.swift */; };
 		D86C49B12ABC95BD0084748B /* SocialContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86C49B02ABC95BD0084748B /* SocialContainerView.swift */; };
 		D8760B292AAFB8A9004D0292 /* EditingActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8760B282AAFB8A9004D0292 /* EditingActivityView.swift */; };
+		D88211662B2CC7CE00235827 /* GroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88211652B2CC7CE00235827 /* GroupsView.swift */; };
+		D88211682B2CE0D600235827 /* FriendGroupPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88211672B2CE0D600235827 /* FriendGroupPanel.swift */; };
+		D882116A2B2CF39C00235827 /* AddingGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88211692B2CF39C00235827 /* AddingGroupView.swift */; };
 		D8C24DA62AA65C45004923EC /* ActivityLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C24DA52AA65C45004923EC /* ActivityLabel.swift */; };
 		D8D6F6902ABE68FD00E026A5 /* FriendRequestPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D6F68F2ABE68FD00E026A5 /* FriendRequestPanel.swift */; };
 		D8FCFB6C2AB8D2B00096FA5A /* ActivityLabelPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8FCFB6B2AB8D2B00096FA5A /* ActivityLabelPreview.swift */; };
@@ -98,6 +101,9 @@
 		D86C49AE2ABC95860084748B /* RequestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsView.swift; sourceTree = "<group>"; };
 		D86C49B02ABC95BD0084748B /* SocialContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialContainerView.swift; sourceTree = "<group>"; };
 		D8760B282AAFB8A9004D0292 /* EditingActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditingActivityView.swift; sourceTree = "<group>"; };
+		D88211652B2CC7CE00235827 /* GroupsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsView.swift; sourceTree = "<group>"; };
+		D88211672B2CE0D600235827 /* FriendGroupPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendGroupPanel.swift; sourceTree = "<group>"; };
+		D88211692B2CF39C00235827 /* AddingGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingGroupView.swift; sourceTree = "<group>"; };
 		D8C24DA52AA65C45004923EC /* ActivityLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLabel.swift; sourceTree = "<group>"; };
 		D8D6F68F2ABE68FD00E026A5 /* FriendRequestPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestPanel.swift; sourceTree = "<group>"; };
 		D8FCFB6B2AB8D2B00096FA5A /* ActivityLabelPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLabelPreview.swift; sourceTree = "<group>"; };
@@ -184,6 +190,7 @@
 				D815AF672ABD1E1300B25E4C /* RequestPanel.swift */,
 				D8D6F68F2ABE68FD00E026A5 /* FriendRequestPanel.swift */,
 				D85ABC552ACC6D82008BA139 /* Network.swift */,
+				D88211672B2CE0D600235827 /* FriendGroupPanel.swift */,
 			);
 			path = "Training Reminder";
 			sourceTree = "<group>";
@@ -224,6 +231,8 @@
 				D8FCFB6D2AB9EC6A0096FA5A /* FriendsView.swift */,
 				D86C49AE2ABC95860084748B /* RequestsView.swift */,
 				D86C49B02ABC95BD0084748B /* SocialContainerView.swift */,
+				D88211652B2CC7CE00235827 /* GroupsView.swift */,
+				D88211692B2CF39C00235827 /* AddingGroupView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -392,6 +401,7 @@
 				D83DAC572AAA360F004C3310 /* CustomTextField.swift in Sources */,
 				D82E16FB2AA640DE0005CF7D /* ContentView.swift in Sources */,
 				D83DAC5B2AAA640D004C3310 /* CircleProgressBar.swift in Sources */,
+				D882116A2B2CF39C00235827 /* AddingGroupView.swift in Sources */,
 				D86C49AD2ABB75A40084748B /* FriendPanel.swift in Sources */,
 				D815AF682ABD1E1300B25E4C /* RequestPanel.swift in Sources */,
 				D83DAC552AAA34F0004C3310 /* FieldValidators.swift in Sources */,
@@ -405,8 +415,10 @@
 				D83DAC592AAA398D004C3310 /* ForgotPasswordView.swift in Sources */,
 				D82E16F92AA640DE0005CF7D /* Training_ReminderApp.swift in Sources */,
 				D84BFAFF2AA6B872004F80D1 /* FirebaseService.swift in Sources */,
+				D88211662B2CC7CE00235827 /* GroupsView.swift in Sources */,
 				D8FCFB6E2AB9EC6A0096FA5A /* FriendsView.swift in Sources */,
 				D8FCFB6C2AB8D2B00096FA5A /* ActivityLabelPreview.swift in Sources */,
+				D88211682B2CE0D600235827 /* FriendGroupPanel.swift in Sources */,
 				D8760B292AAFB8A9004D0292 /* EditingActivityView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

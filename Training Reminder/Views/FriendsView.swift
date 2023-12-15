@@ -23,7 +23,7 @@ struct SearchBar: View {
             Image(systemName: "magnifyingglass")
                 .font(.footnote)
             
-            CustomTextField(placeholder: Text("Search or add friends").foregroundColor(.gray), text: $searchObject.text, isSecure: false)
+            CustomTextField(placeholder: Text(placeholder).foregroundColor(.gray), text: $searchObject.text, isSecure: false)
                 .onReceive(searchObject.$text.debounce(for: .seconds(0.4), scheduler: DispatchQueue.main))
             {
                 guard $0 != "" else {
@@ -96,7 +96,7 @@ struct FriendsView: View {
     @Environment(\.refresh) private var refresh
     @State private var isRefreshing = false
     let amountBeforeRefreshing: CGFloat = 125
-    
+        
     // MARK: LOADFRIENDS()
     
     private func loadFriends() async {
@@ -146,7 +146,6 @@ struct FriendsView: View {
                             .frame(maxWidth: .infinity)
                         
                         Button(action: {
-                            // TODO: CANCEL SEARCH
                             withAnimation(.linear(duration: 0.2)) {
                                 showingCancel.toggle()
                                 hideKeyboard()
@@ -159,6 +158,7 @@ struct FriendsView: View {
                         .frame(width: showingCancel ? 75 : 0)
                         
                     }
+                    
                     
                     // MARK: FRIENDS DISPLAY
                     
@@ -335,10 +335,5 @@ struct FriendsView: View {
     }
 }
 
-struct FriendsView_Previews: PreviewProvider {
-    static var previews: some View {
-        FriendsView()
-    }
-}
 
 
