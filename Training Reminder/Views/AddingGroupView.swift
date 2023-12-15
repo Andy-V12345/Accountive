@@ -120,28 +120,32 @@ struct AddingGroupView: View {
                     }
                     
                     // MARK: FRIEND SELECTION
-                    VStack(spacing: 10) {
-                        Text("SELECT FRIENDS")
-                            .bold()
-                            .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .leading, endPoint: .trailing)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                    VStack(spacing: 20) {
                         
-                        // MARK: SEARCHBAR
-                        HStack(spacing: showingCancel ? 5 : 0) {
-                            SearchBar(text: $searchQuery, placeholder: "Search your friends", showingCancel: $showingCancel)
-                                .frame(maxWidth: .infinity)
+                        VStack(spacing: 10) {
                             
-                            Button(action: {
-                                withAnimation(.linear(duration: 0.2)) {
-                                    showingCancel.toggle()
-                                    hideKeyboard()
-                                }
-                            }, label: {
-                                Text("Cancel")
-                                    .lineLimit(1)
-                                    .truncationMode(.tail)
-                            })
-                            .frame(width: showingCancel ? 75 : 0)
+                            Text("SELECT FRIENDS")
+                                .bold()
+                                .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .leading, endPoint: .trailing)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            // MARK: SEARCHBAR
+                            HStack(spacing: showingCancel ? 5 : 0) {
+                                SearchBar(text: $searchQuery, placeholder: "Search your friends", showingCancel: $showingCancel)
+                                    .frame(maxWidth: .infinity)
+                                
+                                Button(action: {
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        showingCancel.toggle()
+                                        hideKeyboard()
+                                    }
+                                }, label: {
+                                    Text("Cancel")
+                                        .lineLimit(1)
+                                        .truncationMode(.tail)
+                                })
+                                .frame(width: showingCancel ? 75 : 0)
+                            }
                         }
                         
                         GeometryReader { scrollGeo in
