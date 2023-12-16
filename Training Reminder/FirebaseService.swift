@@ -62,6 +62,40 @@ class FirebaseService {
     let db = Firestore.firestore()
     lazy var functions = Functions.functions()
     
+    func getFriendGroups(uid: String) async throws -> [FriendGroup] {
+        
+        let groupsRef = db.collection("/groups")
+        var ret: [FriendGroup] = []
+        
+        do {
+            let query = try await groupsRef.whereField("owner", isEqualTo: uid).getDocuments()
+            if query.documents.isEmpty {
+                return ret
+            }
+            else {
+                for i in 0..<query.documents.count {
+                    let doc = query.documents[i]
+                    let data = doc.data()
+                    let friendsData = data["friends"] as? [String: [String: String]] ?? [:]
+                    
+                    var friends: [Friend] = []
+                    
+                    for (uid, friendData) in friendsData {
+                        friends.append(Friend(uid: uid, name: friendData["name"]!, username: friendData["username"]!, status: friendData["status"]!))
+                    }
+                    
+                    ret.append(FriendGroup(id: doc.documentID, name: data["group_name"] as! String, friends: friends))
+                    
+                }
+                
+                return ret
+            }
+        }
+        catch {
+            throw error
+        }
+    }
+    
 
     // MARK: NOTIFY FRIENDS OF COMPLETED TASK
     func notifyFriends(uid: String, username: String, task: String) async throws {

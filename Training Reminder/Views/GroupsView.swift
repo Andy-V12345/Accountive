@@ -31,10 +31,7 @@ struct GroupsView: View {
     
     @EnvironmentObject var authState: AuthState
     
-    @State var friendGroups: [FriendGroup] = [
-        FriendGroup(id: "feardasd", name: "real ones", friends: [Friend(name: "Nam", username: "nammy", status: "FRIEND"), Friend(name: "Andy", username: "andy.v", status: "FRIEND")]),
-        FriendGroup(id: "2dlkjskljopiu", name: "homies", friends: [Friend(name: "Kavin", username: "kavster", status: "FRIEND"), Friend(name: "Alan", username: "bigalawn", status: "FRIEND")])
-    ]
+    @State var friendGroups: [FriendGroup] = []
     
     @State var isAddingGroup = false
     
@@ -42,6 +39,10 @@ struct GroupsView: View {
     @State var isDeleted: String?
     @State var changeHeight: String?
     @State var deleteIndex: Int?
+    
+    @State var isLoading = false
+    
+    let firebaseService = FirebaseService()
     
     var body: some View {
         GeometryReader { screen in
@@ -72,91 +73,45 @@ struct GroupsView: View {
                         
                     })
                     
+                    
                     GeometryReader { scrollGeo in
                         ScrollView(.vertical) {
-                            if friendGroups.isEmpty {
+                            if isLoading {
                                 VStack {
-                                    Text("Add a group!")
-                                        .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
-                                        .italic()
+                                    Spacer()
+                                    ProgressView()
+                                        .tint(Color(hex: "A6AEF0"))
+                                        .frame(width: 300)
+                                        .controlSize(.regular)
+                                    Spacer()
                                 }
                                 .frame(width: scrollGeo.size.width)
                                 .frame(minHeight: scrollGeo.size.height - 100)
                             }
                             else {
-                                VStack(spacing: 10) {
-                                    ForEach(Array(friendGroups.enumerated()), id:\.element) { offset, friendGroup in
-                                        ZStack {
-                                            
-                                            FriendGroupPanel(friendGroup: friendGroup, isDeleting: $isDeleting)
-                                                .opacity(isDeleting == friendGroup.id ? 0 : 1)
-                                            
-                                            // MARK: DELETE FRIEND GROUP
-                                            
-                                            HStack(spacing: 15) {
-                                                if isDeleting == friendGroup.id {
-                                                    
-                                                    Image(systemName: "chevron.right")
-                                                        .foregroundColor(.white)
-                                                        .onTapGesture {
-                                                            withAnimation(.spring()) {
-                                                                isDeleting = nil
-                                                            }
-                                                            
-                                                            deleteIndex = nil
-                                                        }
-                                                    
-                                                    Text("Delete this group?")
-                                                        .foregroundColor(.white)
-                                                        .bold()
-                                                    
-                                                    Spacer()
-                                                    
-                                                    
-                                                    Spacer()
-                                                    
-                                                    HStack(spacing: 30) {
-                                                        Image(systemName: "checkmark")
-                                                            .foregroundColor(.white)
-                                                            .onTapGesture {
-                                                                Task {
-                                                                    
-                                                                    withAnimation(.linear(duration: 0.3)) {
-                                                                        isDeleted = friendGroup.id
-                                                                    }
-                                                                    
-                                                                    deleteIndex = offset
-                                                                    
-                                                                    withAnimation(.spring(dampingFraction: 0.55).delay(0.3)) {
-                                                                        changeHeight = friendGroup.id
-                                                                    }
-                                                                    
-                                                                    do {
-                                                                        
-                                                                        
-                                                                        try await Task.sleep(nanoseconds: UInt64(1.5) * 1_000_000_000)
-                                                                        
-                                                                        
-                                                                        isDeleting = nil
-                                                                        
-                                                                        friendGroups.removeAll { value in
-                                                                            value.id == friendGroup.id
-                                                                        }
-                                                                        
-                                                                        isDeleted = nil
-                                                                        changeHeight = nil
-                                                                        deleteIndex = nil
-                                                                        
-                                                                    }
-                                                                    catch {
-//                                                                        errorMsg = "Error deleting activity"
-//                                                                        isError = true
-                                                                    }
-                                                                    
-                                                                }
-                                                            }
+                                if friendGroups.isEmpty {
+                                    VStack {
+                                        Text("Add a group!")
+                                            .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
+                                            .italic()
+                                    }
+                                    .frame(width: scrollGeo.size.width)
+                                    .frame(minHeight: scrollGeo.size.height - 100)
+                                }
+                                else {
+                                    VStack(spacing: 10) {
+                                        ForEach(Array(friendGroups.enumerated()), id:\.element) { offset, friendGroup in
+                                            ZStack {
+                                                
+                                                FriendGroupPanel(friendGroup: friendGroup, isDeleting: $isDeleting)
+                                                    .opacity(isDeleting == friendGroup.id ? 0 : 1)
+                                                
+                                                // MARK: DELETE FRIEND GROUP
+                                                
+                                                HStack(spacing: 15) {
+                                                    if isDeleting == friendGroup.id {
                                                         
-                                                        Image(systemName: "xmark")
+                                                        Image(systemName: "chevron.right")
                                                             .foregroundColor(.white)
                                                             .onTapGesture {
                                                                 withAnimation(.spring()) {
@@ -165,25 +120,86 @@ struct GroupsView: View {
                                                                 
                                                                 deleteIndex = nil
                                                             }
+                                                        
+                                                        Text("Delete this group?")
+                                                            .foregroundColor(.white)
+                                                            .bold()
+                                                        
+                                                        Spacer()
+                                                        
+                                                        
+                                                        Spacer()
+                                                        
+                                                        HStack(spacing: 30) {
+                                                            Image(systemName: "checkmark")
+                                                                .foregroundColor(.white)
+                                                                .onTapGesture {
+                                                                    Task {
+                                                                        
+                                                                        withAnimation(.linear(duration: 0.3)) {
+                                                                            isDeleted = friendGroup.id
+                                                                        }
+                                                                        
+                                                                        deleteIndex = offset
+                                                                        
+                                                                        withAnimation(.spring(dampingFraction: 0.55).delay(0.3)) {
+                                                                            changeHeight = friendGroup.id
+                                                                        }
+                                                                        
+                                                                        do {
+                                                                            
+                                                                            
+                                                                            try await Task.sleep(nanoseconds: UInt64(1.5) * 1_000_000_000)
+                                                                            
+                                                                            
+                                                                            isDeleting = nil
+                                                                            
+                                                                            friendGroups.removeAll { value in
+                                                                                value.id == friendGroup.id
+                                                                            }
+                                                                            
+                                                                            isDeleted = nil
+                                                                            changeHeight = nil
+                                                                            deleteIndex = nil
+                                                                            
+                                                                        }
+                                                                        catch {
+                                                                            //                                                                        errorMsg = "Error deleting activity"
+                                                                            //                                                                        isError = true
+                                                                        }
+                                                                        
+                                                                    }
+                                                                }
+                                                            
+                                                            Image(systemName: "xmark")
+                                                                .foregroundColor(.white)
+                                                                .onTapGesture {
+                                                                    withAnimation(.spring()) {
+                                                                        isDeleting = nil
+                                                                    }
+                                                                    
+                                                                    deleteIndex = nil
+                                                                }
+                                                        }
+                                                        
                                                     }
-                                                    
                                                 }
-                                            }
-                                            .padding(.horizontal, 20)
-                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                            .background(LinearGradient(colors: [Color(hex: "f83d5c"), Color(hex: "fd4b2f")], startPoint: .bottomLeading, endPoint: .topTrailing))
-                                            .cornerRadius(15)
-                                            .offset(x: isDeleting == friendGroup.id ? 0 : 500)
-                                            .opacity(isDeleting == friendGroup.id ? 1 : 0)
+                                                .padding(.horizontal, 20)
+                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                                .background(LinearGradient(colors: [Color(hex: "f83d5c"), Color(hex: "fd4b2f")], startPoint: .bottomLeading, endPoint: .topTrailing))
+                                                .cornerRadius(15)
+                                                .offset(x: isDeleting == friendGroup.id ? 0 : 500)
+                                                .opacity(isDeleting == friendGroup.id ? 1 : 0)
+                                                
+                                            } //: ZStack
+                                            .offset(x: isDeleted == friendGroup.id ? 500 : 0)
+                                            .offset(y: changeHeight != nil && changeHeight! != friendGroup.id && (deleteIndex != nil && deleteIndex! < offset) ? -10 : 0)
+                                            .frame(maxHeight: changeHeight == friendGroup.id ? 0 : .infinity)
                                             
-                                        } //: ZStack
-                                        .offset(x: isDeleted == friendGroup.id ? 500 : 0)
-                                        .offset(y: changeHeight != nil && changeHeight! != friendGroup.id && (deleteIndex != nil && deleteIndex! < offset) ? -10 : 0)
-                                        .frame(maxHeight: changeHeight == friendGroup.id ? 0 : .infinity)
+                                        }
                                         
-                                    }
-                                    
-                                } //: VStack
+                                    } //: VStack
+                                }
                             }
                         }
                     }
@@ -194,6 +210,18 @@ struct GroupsView: View {
                 } //: VStack
                 .ignoresSafeArea(.keyboard)
             } //: ZStack
+            .onAppear {
+                Task {
+                    do {
+                        isLoading = true
+                        friendGroups = try await firebaseService.getFriendGroups(uid: authState.user!.uid)
+                        isLoading = false
+                    }
+                    catch {
+                        
+                    }
+                }
+            }
             .onTapGesture {
                 hideKeyboard()
             }
