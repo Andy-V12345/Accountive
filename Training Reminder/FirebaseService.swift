@@ -128,6 +128,26 @@ class FirebaseService {
             throw error
         }
     }
+    
+    // MARK: UPDATE FRIEND GROUP
+    func updateFriendGroup(groupId: String, name: String, friends: [Friend]) {
+        let groupDoc = self.db.collection("/groups").document(groupId)
+        
+        var friendMap: [String: [String: String]] = [:]
+        
+        for friend in friends {
+            friendMap[friend.uid] = [
+                "name": friend.name,
+                "username": friend.username,
+                "status": "FRIEND"
+            ]
+        }
+        
+        groupDoc.updateData([
+            "group_name": name,
+            "friends": friendMap
+        ])
+    }
 
     // MARK: NOTIFY FRIENDS OF COMPLETED TASK
     func notifyFriends(uid: String, username: String, task: String) async throws {

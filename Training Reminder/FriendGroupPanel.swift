@@ -48,6 +48,8 @@ struct FriendGroupPanel: View {
             
             isLoadingFriends = true
             
+            friendSelections.removeAll()
+            
             for friend in selectedFriends {
                 let res = friendSelections.contains { value in
                     value.friend.uid == friend.uid
@@ -296,8 +298,10 @@ struct FriendGroupPanel: View {
                                             Text("No friends found!")
                                                 .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
                                                 .italic()
+                                                .frame(maxWidth: .infinity, alignment: .center)
                                             Spacer()
                                         }
+                                        .padding(.top, 25)
                                         .overlay(GeometryReader { geo in
                                             let currentScrollViewPosition = -geo.frame(in: .named("scrollview")).origin.y
                                             
@@ -309,7 +313,6 @@ struct FriendGroupPanel: View {
                                     }
                                 }
                             } //: ScrollView
-                            .scrollIndicators(.hidden)
                             .coordinateSpace(name: "scrollview")
                             .onPreferenceChange(FriendGroupKey.self) { scrollPosition in
                                 if scrollPosition < -amountBeforeRefreshing && !isRefreshing {
@@ -361,13 +364,14 @@ struct FriendGroupPanel: View {
                         Spacer()
                         
                         Button(action: {
-                            // TODO: UPDATE ACTIVITY
+                            // MARK: UPDATE ACTIVITY
                             
                             hideKeyboard()
-                            //                                activity.name = newName
-                            //                                activity.description = newDescription
-                            //                                firebaseService.updateActivityByDay(newActivity: activity, uid: authState.user!.uid)
-                            //
+                            firebaseService.updateFriendGroup(groupId: friendGroup.id, name: newName, friends: selectedFriends)
+                            
+                            friendGroup.name = newName
+                            friendGroup.friends = selectedFriends
+                            
                             withAnimation(.spring(duration: 0.3, bounce: 0.3)) {
                                 updatingViews -= 1
                             }
@@ -381,14 +385,20 @@ struct FriendGroupPanel: View {
                                 .foregroundColor(.green)
                                 .frame(maxWidth: .infinity, alignment: .center)
                         })
+                        .opacity(newName.trimmingCharacters(in: .whitespacesAndNewlines).count == 0 || selectedFriends.count == 0 ? 0.4 : 1)
+                        .disabled(newName.trimmingCharacters(in: .whitespacesAndNewlines).count == 0 || selectedFriends.count == 0)
                         
                     } //: HStack
                 }
-                .frame(height: 400)
+                .frame(height: 325)
                 .padding(20)
                 .background(Color.gray.opacity(0.05).matchedGeometryEffect(id: "background", in: namespace))
                 .cornerRadius(15)
                 .onAppear {
+                    print(friendGroup.friends)
+                    newName = friendGroup.name
+                    selectedFriends = friendGroup.friends
+                    print(selectedFriends)
                     searchQuery = ""
                     showingCancel = false
                     Task {
@@ -397,10 +407,6 @@ struct FriendGroupPanel: View {
                 }
             }
         } //: ZStack
-        .onAppear {
-            newName = friendGroup.name
-            selectedFriends = friendGroup.friends
-        }
         .onChange(of: searchQuery) { _ in
             loadQuery()
         }
