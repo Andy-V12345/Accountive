@@ -165,8 +165,10 @@ struct GroupsView: View {
                                                                         do {
                                                                             
                                                                             
-                                                                            try await Task.sleep(nanoseconds: UInt64(1.5) * 1_000_000_000)
+                                                                            try await Task.sleep(nanoseconds: UInt64(0.9) * 1_000_000_000)
                                                                             
+                                                                            
+                                                                            try await firebaseService.deleteFriendGroup(groupId: friendGroup.id)
                                                                             
                                                                             isDeleting = nil
                                                                             
@@ -180,8 +182,8 @@ struct GroupsView: View {
                                                                             
                                                                         }
                                                                         catch {
-                                                                            //                                                                        errorMsg = "Error deleting activity"
-                                                                            //                                                                        isError = true
+                                                                            errorMsg = "Error deleting activity"
+                                                                            isError = true
                                                                         }
                                                                         
                                                                     }
@@ -249,7 +251,7 @@ struct GroupsView: View {
                 AlertToast(displayMode: .hud, type: .error(Color(hex: "ff5858")), subTitle: errorMsg)
             })
         } //: GeometryReader
-       
+        
     }
 }
 

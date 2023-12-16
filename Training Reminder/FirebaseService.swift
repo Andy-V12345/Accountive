@@ -117,7 +117,17 @@ class FirebaseService {
         ])
     }
     
-    
+    // MARK: DELETE FRIEND GROUP
+    func deleteFriendGroup(groupId: String) async throws {
+        let groupDoc = self.db.collection("/groups").document(groupId)
+        
+        do {
+            try await groupDoc.delete()
+        }
+        catch {
+            throw error
+        }
+    }
 
     // MARK: NOTIFY FRIENDS OF COMPLETED TASK
     func notifyFriends(uid: String, username: String, task: String) async throws {
