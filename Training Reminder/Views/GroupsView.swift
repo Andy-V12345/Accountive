@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AlertToast
 
 class FriendGroup: Hashable {
     var id: String
@@ -41,6 +42,9 @@ struct GroupsView: View {
     @State var deleteIndex: Int?
     
     @State var isLoading = false
+    
+    @State var isError = false
+    @State var errorMsg = ""
     
     let firebaseService = FirebaseService()
     
@@ -218,7 +222,8 @@ struct GroupsView: View {
                         isLoading = false
                     }
                     catch {
-                        
+                        errorMsg = "Error loading friend groups"
+                        isError = true
                     }
                 }
             }
@@ -228,6 +233,9 @@ struct GroupsView: View {
             .fullScreenCover(isPresented: $isAddingGroup, content: {
                 AddingGroupView()
                     .environmentObject(authState)
+            })
+            .toast(isPresenting: $isError, duration: 3, alert: {
+                AlertToast(displayMode: .hud, type: .error(Color(hex: "ff5858")), subTitle: errorMsg)
             })
         } //: GeometryReader
        
