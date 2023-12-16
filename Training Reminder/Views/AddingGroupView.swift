@@ -61,11 +61,19 @@ struct AddingGroupView: View {
             isLoadingFriends = true
             
             let friends = try await firebaseService.getFriends(uid: authState.user!.uid)
-            
-            friendSelections.removeAll()
-            
+                        
             for friend in friends {
-                friendSelections.append(FriendGroupSelection(friend: friend))
+                let isSelected = selectedFriends.contains { value in
+                    value.uid == friend.uid
+                }
+                
+                let res = friendSelections.contains { value in
+                    value.friend.uid == friend.uid
+                }
+                
+                if !res {
+                    friendSelections.append(FriendGroupSelection(friend: friend, isSelected: isSelected))
+                }
             }
             
             isLoadingFriends = false

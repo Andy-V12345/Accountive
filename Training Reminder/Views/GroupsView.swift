@@ -46,6 +46,8 @@ struct GroupsView: View {
     @State var isError = false
     @State var errorMsg = ""
     
+    @State var updatingViews = 0
+    
     let firebaseService = FirebaseService()
     
     func loadGroups() async {
@@ -67,27 +69,30 @@ struct GroupsView: View {
                 
                 VStack(spacing: 20) {
                     
-                    Button(action: {
-                        isAddingGroup = true
-                    }, label: {
-                        HStack(spacing: 10) {
-                            Text("Create a Group")
-                                .font(.title3)
-                                .foregroundColor(.white)
-                            Image(systemName: "plus")
-                                .font(.title3)
-                                .foregroundColor(.white)
-                        }
-                        .bold()
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 25)
-                        .padding(.horizontal, 20)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(LinearGradient(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing))
-                        )
+                    if updatingViews == 0 {
                         
-                    })
+                        Button(action: {
+                            isAddingGroup = true
+                        }, label: {
+                            HStack(spacing: 10) {
+                                Text("Create a Group")
+                                    .font(.title3)
+                                    .foregroundColor(.white)
+                                Image(systemName: "plus")
+                                    .font(.title3)
+                                    .foregroundColor(.white)
+                            }
+                            .bold()
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 25)
+                            .padding(.horizontal, 20)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(LinearGradient(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing))
+                            )
+                            
+                        })
+                    }
                     
                     
                     GeometryReader { scrollGeo in
@@ -119,8 +124,9 @@ struct GroupsView: View {
                                         ForEach(Array(friendGroups.enumerated()), id:\.element) { offset, friendGroup in
                                             ZStack {
                                                 
-                                                FriendGroupPanel(friendGroup: friendGroup, isDeleting: $isDeleting)
+                                                FriendGroupPanel(friendGroup: friendGroup, isDeleting: $isDeleting, updatingViews: $updatingViews)
                                                     .opacity(isDeleting == friendGroup.id ? 0 : 1)
+                                                    .environmentObject(authState)
                                                 
                                                 // MARK: DELETE FRIEND GROUP
                                                 
@@ -182,7 +188,7 @@ struct GroupsView: View {
                                                                             
                                                                         }
                                                                         catch {
-                                                                            errorMsg = "Error deleting activity"
+                                                                            errorMsg = "Error deleting group"
                                                                             isError = true
                                                                         }
                                                                         
@@ -217,6 +223,7 @@ struct GroupsView: View {
                                         }
                                         
                                     } //: VStack
+                                    .padding(.bottom, 70)
                                 }
                             }
                         }
