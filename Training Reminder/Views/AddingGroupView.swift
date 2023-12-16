@@ -283,7 +283,8 @@ struct AddingGroupView: View {
                     }
                     
                     Button(action: {
-                        // TODO: CREATE GROUP
+                        firebaseService.createFriendGroup(uid: authState.user!.uid, groupName: groupName, friends: selectedFriends)
+                        dismiss()
                     }, label: {
                         Text("Create Group")
                             .frame(maxWidth: .infinity)
@@ -295,8 +296,8 @@ struct AddingGroupView: View {
                                     .fill(LinearGradient(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .leading, endPoint: .trailing))
                             )
                             .foregroundStyle(.white)
-                            .disabled(selectedFriends.isEmpty)
-                            .opacity(selectedFriends.isEmpty ? 0.5 : 1)
+                            .disabled(selectedFriends.isEmpty || groupName == "")
+                            .opacity(selectedFriends.isEmpty || groupName == "" ? 0.5 : 1)
                     })
                     
                     Spacer()

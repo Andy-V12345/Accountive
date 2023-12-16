@@ -62,9 +62,10 @@ class FirebaseService {
     let db = Firestore.firestore()
     lazy var functions = Functions.functions()
     
+    // MARK: GET FRIEND GROUPS
     func getFriendGroups(uid: String) async throws -> [FriendGroup] {
         
-        let groupsRef = db.collection("/groups")
+        let groupsRef = self.db.collection("/groups")
         var ret: [FriendGroup] = []
         
         do {
@@ -95,6 +96,27 @@ class FirebaseService {
             throw error
         }
     }
+    
+    // MARK: CREATE FRIEND GROUP
+    func createFriendGroup(uid: String, groupName: String, friends: [Friend]) {
+        
+        var friendMap: [String: [String: String]] = [:]
+        
+        for friend in friends {
+            friendMap[friend.uid] = [
+                "name": friend.name,
+                "username": friend.username,
+                "status": "FRIEND"
+            ]
+        }
+        
+        let groupRef = self.db.collection("/groups").addDocument(data: [
+            "owner": uid,
+            "group_name": groupName,
+            "friends": friendMap
+        ])
+    }
+    
     
 
     // MARK: NOTIFY FRIENDS OF COMPLETED TASK

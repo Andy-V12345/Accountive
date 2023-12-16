@@ -48,6 +48,18 @@ struct GroupsView: View {
     
     let firebaseService = FirebaseService()
     
+    func loadGroups() async {
+        do {
+            isLoading = true
+            friendGroups = try await firebaseService.getFriendGroups(uid: authState.user!.uid)
+            isLoading = false
+        }
+        catch {
+            errorMsg = "Error loading friend groups"
+            isError = true
+        }
+    }
+    
     var body: some View {
         GeometryReader { screen in
             ZStack {
@@ -216,14 +228,13 @@ struct GroupsView: View {
             } //: ZStack
             .onAppear {
                 Task {
-                    do {
-                        isLoading = true
-                        friendGroups = try await firebaseService.getFriendGroups(uid: authState.user!.uid)
-                        isLoading = false
-                    }
-                    catch {
-                        errorMsg = "Error loading friend groups"
-                        isError = true
+                    await loadGroups()
+                }
+            }
+            .onChange(of: isAddingGroup) { value in
+                if !value {
+                    Task {
+                        await loadGroups()
                     }
                 }
             }
