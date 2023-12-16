@@ -69,7 +69,7 @@ class FirebaseService {
         var ret: [FriendGroup] = []
         
         do {
-            let query = try await groupsRef.whereField("owner", isEqualTo: uid).getDocuments()
+            let query = try await groupsRef.whereField("owner", isEqualTo: uid).order(by: "group_name").getDocuments()
             if query.documents.isEmpty {
                 return ret
             }
@@ -231,6 +231,11 @@ class FirebaseService {
                         let totalCount = try await getFriendTotalCount(friendUid: uid)
                         ret.append(Friend(uid: uid, name: data["name"]!, username: data["username"]!, status: "FRIEND", doneCount: doneCount, totalCount: totalCount))
                     }
+                    
+                    ret.sorted { friend1, friend2 in
+                        friend1.name < friend2.name
+                    }
+                    
                     return ret
                 }
             }
@@ -596,7 +601,7 @@ class FirebaseService {
         let collectionRef = self.db.collection("/uids/\(uid)/activities")
                 
         do {
-            let query = try await collectionRef.whereField("day", isEqualTo: day).getDocuments()
+            let query = try await collectionRef.whereField("day", isEqualTo: day).order(by: "title").getDocuments()
             if query.documents.isEmpty {
                 return []
             }
@@ -606,7 +611,8 @@ class FirebaseService {
                     let doc = query.documents[i].data()
                     activities.append(Activity(id: query.documents[i].documentID, name: doc["title"] as! String, description: doc["description"] as? String ?? "", isDone: doc["isDone"] as? Bool, day: doc["day"] as! String, groupPath: doc["groupPath"] as? String ?? ""))
                 }
-
+                
+                
                 return activities
             }
         }
