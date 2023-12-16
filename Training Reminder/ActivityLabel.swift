@@ -240,8 +240,7 @@ struct ActivityLabel: View {
                             Spacer()
                             
                             Button(action: {
-                                //TODO: UPDATE ACTIVITY
-                                
+                                // MARK: UPDATE ACTIVITY
                                 hideKeyboard()
                                 activity.name = newName
                                 activity.description = newDescription
@@ -260,6 +259,8 @@ struct ActivityLabel: View {
                                     .foregroundColor(.green)
                                     .frame(maxWidth: .infinity, alignment: .center)
                             })
+                            .opacity(newName.trimmingCharacters(in: .whitespacesAndNewlines).count == 0 ? 0.4 : 1)
+                            .disabled(newName.trimmingCharacters(in: .whitespacesAndNewlines).count == 0)
 
                         }
                     }

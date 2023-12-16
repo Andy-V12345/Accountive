@@ -411,7 +411,7 @@ struct AddingItemView: View {
                                                 .padding(.vertical, 20)
                                                 .padding(.horizontal, 20)
                                                 .background(
-                                                    Color.gray.opacity(0.1)
+                                                    Color.gray.opacity(0.05)
                                                 )
                                                 .cornerRadius(15)
                                                 .opacity(isDeleting == activity.id ? 0 : 1)
