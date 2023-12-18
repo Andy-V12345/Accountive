@@ -19,14 +19,16 @@ class Activity: Codable, Identifiable, Hashable {
     var isDone = false
     var day: String
     var groupPath: String
+    var friendGroupId: String?
     
-    init(id: String?, name: String, description: String, isDone: Bool?, day: String, groupPath: String) {
+    init(id: String?, name: String, description: String, isDone: Bool?, day: String, groupPath: String, friendGroupId: String?) {
         self.id = id ?? ""
         self.name = name
         self.description = description
         self.isDone = isDone ?? false
         self.day = day
         self.groupPath = groupPath
+        self.friendGroupId = friendGroupId
     }
     
     static func == (lhs: Activity, rhs: Activity) -> Bool {
@@ -110,7 +112,7 @@ class FirebaseService {
             ]
         }
         
-        let groupRef = self.db.collection("/groups").addDocument(data: [
+        let _ = self.db.collection("/groups").addDocument(data: [
             "owner": uid,
             "group_name": groupName,
             "friends": friendMap
@@ -232,7 +234,7 @@ class FirebaseService {
                         ret.append(Friend(uid: uid, name: data["name"]!, username: data["username"]!, status: "FRIEND", doneCount: doneCount, totalCount: totalCount))
                     }
                     
-                    ret.sorted { friend1, friend2 in
+                    ret = ret.sorted { friend1, friend2 in
                         friend1.name < friend2.name
                     }
                     
@@ -475,9 +477,10 @@ class FirebaseService {
                     "description": activity.description,
                     "isDone": false,
                     "day": days[0],
-                    "groupPath": ""
+                    "groupPath": "",
+                    "friendGroupId": activity.friendGroupId ?? ""
                 ])
-                return [Activity(id: activityDoc.documentID, name: activity.name, description: activity.description, isDone: false, day: days[0], groupPath: "")]
+                return [Activity(id: activityDoc.documentID, name: activity.name, description: activity.description, isDone: false, day: days[0], groupPath: "", friendGroupId: activity.friendGroupId)]
             }
             catch {
                 throw error
@@ -497,9 +500,10 @@ class FirebaseService {
                         "description": activity.description,
                         "isDone": false,
                         "day": day,
-                        "groupPath": groupDoc.path
+                        "groupPath": groupDoc.path,
+                        "friendGroupId": activity.friendGroupId ?? ""
                     ])
-                    activities.append(Activity(id: activityDoc.documentID, name: activity.name, description: activity.description, isDone: false, day: day, groupPath: groupDoc.path))
+                    activities.append(Activity(id: activityDoc.documentID, name: activity.name, description: activity.description, isDone: false, day: day, groupPath: groupDoc.path, friendGroupId: activity.friendGroupId))
                     activityIds.append(activityDoc.documentID)
                 }
                 
@@ -609,7 +613,7 @@ class FirebaseService {
                 var activities: [Activity] = []
                 for i in 0..<query.documents.count {
                     let doc = query.documents[i].data()
-                    activities.append(Activity(id: query.documents[i].documentID, name: doc["title"] as! String, description: doc["description"] as? String ?? "", isDone: doc["isDone"] as? Bool, day: doc["day"] as! String, groupPath: doc["groupPath"] as? String ?? ""))
+                    activities.append(Activity(id: query.documents[i].documentID, name: doc["title"] as! String, description: doc["description"] as? String ?? "", isDone: doc["isDone"] as? Bool, day: doc["day"] as! String, groupPath: doc["groupPath"] as? String ?? "", friendGroupId: doc["friendGroupId"] as? String))
                 }
                 
                 
@@ -634,7 +638,7 @@ class FirebaseService {
                 
                 for i in 0..<snapshot.documents.count {
                     let doc = snapshot.documents[i].data()
-                    activities.append(Activity(id: snapshot.documents[i].documentID, name: doc["title"] as! String, description: doc["description"] as? String ?? "", isDone: doc["isDone"] as? Bool, day: doc["day"] as! String, groupPath: doc["groupPath"] as? String ?? ""))
+                    activities.append(Activity(id: snapshot.documents[i].documentID, name: doc["title"] as! String, description: doc["description"] as? String ?? "", isDone: doc["isDone"] as? Bool, day: doc["day"] as! String, groupPath: doc["groupPath"] as? String ?? "", friendGroupId: doc["friendGroupId"] as? String))
                 }
                 return activities
             }

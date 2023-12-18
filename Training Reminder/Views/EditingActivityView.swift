@@ -38,7 +38,7 @@ struct EditingActivityView: View {
     @EnvironmentObject var authState: AuthState
     
     @State var friendGroups: [FriendGroup] = []
-    @State var selectedGroup: FriendGroup? = nil
+    @State var selectedGroupId: String? = nil
     
     let firebaseService = FirebaseService()
     
@@ -126,19 +126,19 @@ struct EditingActivityView: View {
                                     HStack(spacing: 20) {
                                         ForEach(friendGroups, id:\.self) { friendGroup in
                                             Button(action: {
-                                                if selectedGroup == nil || selectedGroup!.id != friendGroup.id {
-                                                    selectedGroup = friendGroup
+                                                if selectedGroupId == nil || selectedGroupId! != friendGroup.id {
+                                                    selectedGroupId = friendGroup.id
                                                 }
-                                                else if selectedGroup!.id == friendGroup.id {
-                                                    selectedGroup = nil
+                                                else if selectedGroupId! == friendGroup.id {
+                                                    selectedGroupId = nil
                                                 }
                                             }, label: {
                                                 Text(friendGroup.name)
-                                                    .foregroundColor((selectedGroup != nil && selectedGroup!.id == friendGroup.id) ? .white : .black)
+                                                    .foregroundColor((selectedGroupId != nil && selectedGroupId! == friendGroup.id) ? .white : .black)
                                                     .padding(.horizontal, 20)
                                                     .padding(.vertical, 8)
                                                     .background(
-                                                        (selectedGroup != nil && selectedGroup!.id == friendGroup.id) ?
+                                                        (selectedGroupId != nil && selectedGroupId! == friendGroup.id) ?
                                                             Color(hex: "A6AEF0")
                                                         :
                                                             Color(hex: "F8F9FA")
@@ -181,7 +181,7 @@ struct EditingActivityView: View {
                                         }
                                     }
                                     
-                                    let _ = try await firebaseService.updateActivity(activity: Activity(id: activity.id, name: activityName, description: activityDescription, isDone: false, day: activity.day, groupPath: activity.groupPath), days: selectedDays, uid: authState.user!.uid)
+                                    let _ = try await firebaseService.updateActivity(activity: Activity(id: activity.id, name: activityName, description: activityDescription, isDone: false, day: activity.day, groupPath: activity.groupPath, friendGroupId: selectedGroupId), days: selectedDays, uid: authState.user!.uid)
                                     
                                     for day in days {
                                         if await firebaseService.getNumActivities(day: day, uid: authState.user!.uid) == 0 {
@@ -235,6 +235,8 @@ struct EditingActivityView: View {
                     for day in preSelectedDays {
                         buttonsSelected[days.firstIndex(of: day)!] = true
                     }
+                    
+                    selectedGroupId = activity.friendGroupId
                 }
                 .opacity(isLoading ? 0.15 : 1)
                 .animation(.linear(duration: 0.5), value: isLoading)

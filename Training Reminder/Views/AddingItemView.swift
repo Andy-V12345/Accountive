@@ -297,9 +297,11 @@ struct AddingItemView: View {
                                 
                                 let tmpName = activityName
                                 let tmpDes = activityDescription
+                                let tmpSelectedGroup = selectedGroup
                                 
                                 activityName = ""
                                 activityDescription = ""
+                                selectedGroup = nil
                                 
                                 buttonsSelected = Array(repeating: false, count: 7)
                                 
@@ -308,7 +310,7 @@ struct AddingItemView: View {
                                 Task {
                                     do {
                                         
-                                        let retVal = try await firebaseService.addActivity(activity: Activity(id: nil, name: tmpName, description: tmpDes, isDone: false, day: days[dayIndex-1], groupPath: ""), days: selectedDays, uid: authState.user!.uid)
+                                        let retVal = try await firebaseService.addActivity(activity: Activity(id: nil, name: tmpName, description: tmpDes, isDone: false, day: days[dayIndex-1], groupPath: "", friendGroupId: tmpSelectedGroup?.id), days: selectedDays, uid: authState.user!.uid)
                                         
                                         withAnimation(.spring()) {
                                             activities.append(contentsOf: retVal)
@@ -663,7 +665,7 @@ struct AddingItemView: View {
                 AlertToast(displayMode: .hud, type: .error(Color(hex: "ff5858")), subTitle: errorMsg)
             })
             .sheet(isPresented: $isEditing, content: {
-                EditingActivityView(activity: activities[selectedIndex ?? 0], activityName: activities[selectedIndex ?? 0].name, activityDescription: activities[selectedIndex ?? 0].description, preSelectedDays: preSelectedDaysForEditing, friendGroups: friendGroups, selectedGroup: selectedGroup)
+                EditingActivityView(activity: activities[selectedIndex ?? 0], activityName: activities[selectedIndex ?? 0].name, activityDescription: activities[selectedIndex ?? 0].description, preSelectedDays: preSelectedDaysForEditing, friendGroups: friendGroups)
                     .environmentObject(authState)
             })
             .onChange(of: isEditing) { newValue in
