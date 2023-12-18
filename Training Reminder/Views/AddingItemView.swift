@@ -663,7 +663,7 @@ struct AddingItemView: View {
                 AlertToast(displayMode: .hud, type: .error(Color(hex: "ff5858")), subTitle: errorMsg)
             })
             .sheet(isPresented: $isEditing, content: {
-                EditingActivityView(activity: activities[selectedIndex ?? 0], activityName: activities[selectedIndex ?? 0].name, activityDescription: activities[selectedIndex ?? 0].description, preSelectedDays: preSelectedDaysForEditing)
+                EditingActivityView(activity: activities[selectedIndex ?? 0], activityName: activities[selectedIndex ?? 0].name, activityDescription: activities[selectedIndex ?? 0].description, preSelectedDays: preSelectedDaysForEditing, friendGroups: friendGroups, selectedGroup: selectedGroup)
                     .environmentObject(authState)
             })
             .onChange(of: isEditing) { newValue in

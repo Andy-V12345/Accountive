@@ -37,6 +37,9 @@ struct EditingActivityView: View {
     
     @EnvironmentObject var authState: AuthState
     
+    @State var friendGroups: [FriendGroup] = []
+    @State var selectedGroup: FriendGroup? = nil
+    
     let firebaseService = FirebaseService()
     
     var body: some View {
@@ -113,12 +116,54 @@ struct EditingActivityView: View {
                                 }
                             }
                         }
+                        
+                        VStack(spacing: screen.size.height < 700 ? 5 : 10) {
+                            Text("Select a group?")
+                                .foregroundColor(.black)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            if friendGroups.count > 0 {
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 20) {
+                                        ForEach(friendGroups, id:\.self) { friendGroup in
+                                            Button(action: {
+                                                if selectedGroup == nil || selectedGroup!.id != friendGroup.id {
+                                                    selectedGroup = friendGroup
+                                                }
+                                                else if selectedGroup!.id == friendGroup.id {
+                                                    selectedGroup = nil
+                                                }
+                                            }, label: {
+                                                Text(friendGroup.name)
+                                                    .foregroundColor((selectedGroup != nil && selectedGroup!.id == friendGroup.id) ? .white : .black)
+                                                    .padding(.horizontal, 20)
+                                                    .padding(.vertical, 8)
+                                                    .background(
+                                                        (selectedGroup != nil && selectedGroup!.id == friendGroup.id) ?
+                                                            Color(hex: "A6AEF0")
+                                                        :
+                                                            Color(hex: "F8F9FA")
+                                                    )
+                                                    .cornerRadius(10)
+                                            })
+                                        }
+                                        
+                                    }
+                                }
+                            }
+                            else {
+                                Text("You have no friend groups")
+                                    .font(.footnote)
+                                    .foregroundStyle(.gray)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .italic()
+                            }
+                        }
                     } //: VStack
                     
                     VStack(spacing: 12) {
                         
                         Button(action: {
-                            // TODO: UPDATE ACTIVITY
+                            // MARK: UPDATE ACTIVITY
                             Task {
                                 
                                 do {
@@ -222,9 +267,9 @@ struct EditingActivityView: View {
     }
 }
 
-struct EditingPreview: PreviewProvider {
-    static var previews: some View {
-        EditingActivityView(activity: Activity(id: "", name: "bruh", description: "", isDone: false, day: "Monday", groupPath: ""), activityName: "Run", activityDescription: "", preSelectedDays: ["Monday"])
-    }
-}
+//struct EditingPreview: PreviewProvider {
+//    static var previews: some View {
+//        EditingActivityView(activity: Activity(id: "", name: "bruh", description: "", isDone: false, day: "Monday", groupPath: ""), activityName: "Run", activityDescription: "", preSelectedDays: ["Monday"])
+//    }
+//}
 
