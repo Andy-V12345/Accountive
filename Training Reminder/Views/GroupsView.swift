@@ -174,7 +174,7 @@ struct GroupsView: View {
                                                                             try await Task.sleep(nanoseconds: UInt64(0.9) * 1_000_000_000)
                                                                             
                                                                             
-                                                                            try await firebaseService.deleteFriendGroup(groupId: friendGroup.id)
+                                                                            try await firebaseService.deleteFriendGroup(uid: authState.user!.uid, groupId: friendGroup.id)
                                                                             
                                                                             isDeleting = nil
                                                                             

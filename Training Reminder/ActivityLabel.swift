@@ -41,6 +41,8 @@ struct ActivityLabel: View {
     
     @State var friendGroups: [FriendGroup] = []
     
+    @State var listener: Any? = nil
+    
     let firebaseService = FirebaseService()
     
     let days = [
@@ -61,7 +63,7 @@ struct ActivityLabel: View {
         
         return group?.name
     }
-    
+        
     // MARK: BODY
     var body: some View {
         ZStack {
@@ -286,6 +288,7 @@ struct ActivityLabel: View {
             newName = activity.name
             newDescription = activity.description
         }
+        
     }
     
     func markActivity() {

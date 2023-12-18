@@ -120,11 +120,27 @@ class FirebaseService {
     }
     
     // MARK: DELETE FRIEND GROUP
-    func deleteFriendGroup(groupId: String) async throws {
+    func deleteFriendGroup(uid: String, groupId: String) async throws {
         let groupDoc = self.db.collection("/groups").document(groupId)
+        let activitiesRef = self.db.collection("/uids/\(uid)/activities")
         
         do {
             try await groupDoc.delete()
+            
+            let query = try await activitiesRef.whereField("friendGroupId", isEqualTo: groupId).getDocuments()
+            
+            if query.documents.isEmpty {
+                return
+            }
+            
+            for doc in query.documents {
+                let activityDoc = activitiesRef.document(doc.documentID)
+                
+                try await activityDoc.updateData([
+                    "friendGroupId": ""
+                ])
+            }
+            
         }
         catch {
             throw error
@@ -662,6 +678,7 @@ class FirebaseService {
                 for i in 0..<query.documents.count {
                     let doc = query.documents[i].data()
                     activities.append(Activity(id: query.documents[i].documentID, name: doc["title"] as! String, description: doc["description"] as? String ?? "", isDone: doc["isDone"] as? Bool, day: doc["day"] as! String, groupPath: doc["groupPath"] as? String ?? "", friendGroupId: doc["friendGroupId"] as? String))
+                    
                 }
                 
                 

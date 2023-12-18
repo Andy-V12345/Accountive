@@ -396,11 +396,18 @@ struct HomeView: View {
                         await loadData(showLoading: true)
                         
                         if activities!.count > 0 && hasShownInstructions == false {
-                            print("bruh")
                             showInstructions = true
                         }
                     }
-                    
+                }
+            }
+            .onChange(of: isShowingFriendsView) { newVal in
+                if !newVal {
+                    Task {
+                        friendGroups = []
+                        activities = nil
+                        await loadData(showLoading: true)
+                    }
                 }
             }
             .onChange(of: doneCount) { count in
@@ -546,11 +553,9 @@ struct HomeView: View {
                         Task {
                             if passwordText.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
                                 do {
-                                    print("deleting")
                                     try await authState.deleteAccount(password: passwordText)
                                 }
                                 catch {
-                                    print("error")
                                     isDeletingError = true
                                 }
                             }
