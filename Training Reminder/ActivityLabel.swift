@@ -39,6 +39,8 @@ struct ActivityLabel: View {
     @State var newName = ""
     @State var newDescription = ""
     
+    @State var friendGroups: [FriendGroup] = []
+    
     let firebaseService = FirebaseService()
     
     let days = [
@@ -54,8 +56,13 @@ struct ActivityLabel: View {
     @State var dayIndex = Calendar.current.component(.weekday, from: Date())
     
     
-    // MARK: BODY
+    func getFriendGroupName(groupId: String) -> String? {
+        let group = friendGroups.first(where: {$0.id == groupId})
+        
+        return group?.name
+    }
     
+    // MARK: BODY
     var body: some View {
         ZStack {
             if !isUpdating {
@@ -91,6 +98,12 @@ struct ActivityLabel: View {
                             .matchedGeometryEffect(id: "divider", in: namespace)
                         
                         VStack(alignment: .leading, spacing: 3) {
+                            
+                            Text(.init("**Group:** \(getFriendGroupName(groupId: activity.friendGroupId ?? "") ?? "None")"))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .font(.headline)
+                                .fontWeight(.regular)
+                            
                             Text("Description:")
                                 .font(.headline)
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -142,7 +155,7 @@ struct ActivityLabel: View {
                     Spacer()
                     
                     Button(action: {
-                        // TODO: DELETE ACTIVITY
+                        // MARK: DELETE ACTIVITY
                         withAnimation(.spring(bounce: 0.15)) {
                             isDeleting = activity.id
                         }

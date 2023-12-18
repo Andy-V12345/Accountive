@@ -48,6 +48,8 @@ struct HomeView: View {
     @State var hasShownInstructions = false
     @State var showInstructions = false
     
+    @State var friendGroups: [FriendGroup] = []
+    
     @Environment(\.scenePhase) var scenePhase
     
     let firebaseService = FirebaseService()
@@ -79,6 +81,7 @@ struct HomeView: View {
             deleteIndex = nil
             activities = await firebaseService.getActivitiesByDay(day: days[dayIndex-1], uid: authState.user!.uid)
             doneCount = try await firebaseService.getDoneCount(day: days[dayIndex-1], uid: authState.user!.uid)
+            friendGroups = try await firebaseService.getFriendGroups(uid: authState.user!.uid)
             totalCount = activities?.count
             
             firebaseService.updateTotalCount(uid: authState.user!.uid, totalCount: totalCount ?? 0)
@@ -219,7 +222,7 @@ struct HomeView: View {
                                         VStack(spacing: 15) {
                                             ForEach(Array(activities!.enumerated()), id:\.element) { offset, activity in
                                                 ZStack {
-                                                    ActivityLabel(activity: activities![offset], doneCount: $doneCount, allDone: $allDone, totalCount: totalCount!, isDeleting: $isDeleting, changeHeight: $changeHeight, deleteIndex: $deleteIndex, updatingViews: $updatingLabels)
+                                                    ActivityLabel(activity: activities![offset], doneCount: $doneCount, allDone: $allDone, totalCount: totalCount!, isDeleting: $isDeleting, changeHeight: $changeHeight, deleteIndex: $deleteIndex, updatingViews: $updatingLabels, friendGroups: friendGroups)
                                                         .environmentObject(authState)
                                                         .opacity(isDeleting == activity.id ? 0 : 1)
                                                     
@@ -275,9 +278,6 @@ struct HomeView: View {
                                                                                     value.id == activity.id
                                                                                 }
                                                                                 
-                                                                                isDeleted = nil
-                                                                                changeHeight = nil
-                                                                                deleteIndex = nil
                                                                                 
                                                                                 if activity.isDone {
                                                                                     doneCount! -= 1
@@ -292,6 +292,10 @@ struct HomeView: View {
                                                                                     firebaseService.removeSubscriptions(days: [days[dayIndex-1]], uid: authState.user!.uid)
                                                                                     try await firebaseService.unsubscribeFromTopic(fcmToken: UserDefaults.standard.string(forKey: "fcmKey")!, days: [days[dayIndex-1]])
                                                                                 }
+                                                                                
+                                                                                isDeleted = nil
+                                                                                changeHeight = nil
+                                                                                deleteIndex = nil
                                                                                 
                                                                             }
                                                                             catch {

@@ -90,6 +90,12 @@ struct AddingItemView: View {
         }
     }
     
+    func getFriendGroupName(groupId: String) -> String? {
+        let group = friendGroups.first(where: {$0.id == groupId})
+        
+        return group?.name
+    }
+    
     
     // MARK: BODY
     
@@ -389,6 +395,11 @@ struct AddingItemView: View {
                                                             )
                                                         
                                                         VStack(alignment: .leading, spacing: 5) {
+                                                            Text(.init("**Group:** \(getFriendGroupName(groupId: activity.friendGroupId ?? "") ?? "None")"))
+                                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                                .font(.headline)
+                                                                .fontWeight(.regular)
+                                                            
                                                             Text("Description:")
                                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                                                 .font(.headline)
@@ -467,6 +478,7 @@ struct AddingItemView: View {
                                                             .frame(width: screen.size.height < 844 ? 15 : 20, height: 25)
                                                             .gradientForeground(colors: [Color(hex: "f83d5c"), Color(hex: "fd4b2f")], startPoint: .bottomLeading, endPoint: .topTrailing)
                                                     })
+                                                    .disabled(changeHeight != nil)
                                                     
                                                 } //: HStack
                                                 .padding(.vertical, 20)
@@ -531,9 +543,6 @@ struct AddingItemView: View {
                                                                             }
                                                                             
                                                                             
-                                                                            isDeleted = nil
-                                                                            deleteIndex = nil
-                                                                            changeHeight = nil
                                                                             
                                                                             let filtered = activities.filter { value in
                                                                                 value.day == days[dayIndex - 1]
@@ -547,6 +556,10 @@ struct AddingItemView: View {
                                                                             firebaseService.removeSubscriptions(days: unsubscribeDays, uid: authState.user!.uid)
                                                                             
                                                                             try await firebaseService.unsubscribeFromTopic(fcmToken: UserDefaults.standard.string(forKey: "fcmKey")!, days: unsubscribeDays)
+                                                                            
+                                                                            isDeleted = nil
+                                                                            deleteIndex = nil
+                                                                            changeHeight = nil
                                                                             
                                                                         }
                                                                         catch {
@@ -583,11 +596,6 @@ struct AddingItemView: View {
                                                                                 }
                                                                             }
                                                                             
-                                                                            
-                                                                            isDeleted = nil
-                                                                            deleteIndex = nil
-                                                                            changeHeight = nil
-                                                                            
                                                                             var unsubscribeDays: [String] = []
                                                                             
                                                                             for day in days {
@@ -602,6 +610,10 @@ struct AddingItemView: View {
                                                                             firebaseService.removeSubscriptions(days: unsubscribeDays, uid: authState.user!.uid)
                                                                             
                                                                             try await firebaseService.unsubscribeFromTopic(fcmToken: UserDefaults.standard.string(forKey: "fcmKey")!, days: unsubscribeDays)
+                                                                            
+                                                                            isDeleted = nil
+                                                                            deleteIndex = nil
+                                                                            changeHeight = nil
                                                                             
                                                                         }
                                                                         catch {
