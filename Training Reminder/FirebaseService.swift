@@ -150,6 +150,34 @@ class FirebaseService {
             "friends": friendMap
         ])
     }
+    
+    // MARK: GET FRIEND GROUP
+    func getFriendGroup(groupId: String) async throws -> FriendGroup? {
+        let groupRef = self.db.collection("/groups").document(groupId)
+        
+        do {
+            let doc = try await groupRef.getDocument()
+            if doc.exists {
+                let data = doc.data()
+                let friendsData = data!["friends"] as? [String: [String: String]] ?? [:]
+                
+                var friends: [Friend] = []
+                
+                for (uid, friendData) in friendsData {
+                    friends.append(Friend(uid: uid, name: friendData["name"]!, username: friendData["username"]!, status: friendData["status"]!))
+                }
+                
+                return FriendGroup(id: doc.documentID, name: data!["group_name"] as! String, friends: friends)
+            }
+            else {
+                return nil
+            }
+        }
+        catch {
+            throw error
+        }
+        
+    }
 
     // MARK: NOTIFY FRIENDS OF COMPLETED TASK
     func notifyFriends(uid: String, username: String, task: String) async throws {
@@ -166,9 +194,7 @@ class FirebaseService {
             }
             
             if !fcmTokens.isEmpty {
-                print(fcmTokens)
                 let res = try await functions.httpsCallable("notifyFriends").call(["fcmTokens": fcmTokens, "body": "\(username) completed task \"\(task)\"!"])
-                print(res.data)
             }
         }
         catch {
@@ -176,8 +202,30 @@ class FirebaseService {
         }
     }
     
-    
-    
+    // MARK: NOTIFY FRIEND GROUP OF COMPLETED TASK
+    func notifyFriendGroup(groupId: String, username: String, task: String) async throws {
+        do {
+            let friendGroup = try await getFriendGroup(groupId: groupId)
+            
+            if friendGroup == nil {
+                return
+            }
+            
+            var friendFcmTokens: [String] = []
+            
+            for friend in friendGroup!.friends {
+                let token = try await getFcmTokenOfFriend(friendUid: friend.uid)
+                
+                if token != "" {
+                    friendFcmTokens.append(token)
+                }
+            }
+            
+            if !friendFcmTokens.isEmpty {
+                let res = try await functions.httpsCallable("notifyFriends").call(["fcmTokens": friendFcmTokens, "body": "\(username) completed task \"\(task)\"!"])
+            }
+        }
+    }
     
     // MARK: GET FCMTOKEN OF FRIEND
     func getFcmTokenOfFriend(friendUid: String) async throws -> String {

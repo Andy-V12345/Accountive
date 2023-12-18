@@ -297,7 +297,12 @@ struct ActivityLabel: View {
         firebaseService.markActivity(activityId: activity.id, uid: authState.user!.uid)
         Task {
             do {
-                try await firebaseService.notifyFriends(uid: authState.user!.uid, username: authState.getUsername(), task: activity.name)
+                if activity.friendGroupId == nil || activity.friendGroupId == "" {
+                    try await firebaseService.notifyFriends(uid: authState.user!.uid, username: authState.getUsername(), task: activity.name)
+                }
+                else {
+                    try await firebaseService.notifyFriendGroup(groupId: activity.friendGroupId!, username: authState.getUsername(), task: activity.name)
+                }
             }
             catch {
                 
