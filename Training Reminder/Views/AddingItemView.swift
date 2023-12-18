@@ -389,6 +389,7 @@ struct AddingItemView: View {
                                                         VStack(alignment: .leading, spacing: 5) {
                                                             Text("Description:")
                                                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                                                .font(.headline)
                                                                 .bold()
                                                             Text(activity.description == "" ? "None" : activity.description)
                                                                 .font(.headline)
@@ -401,6 +402,7 @@ struct AddingItemView: View {
                                                     }, label: {
                                                         HStack(spacing: 20) {
                                                             Text(activity.name)
+                                                                .font(.title3)
                                                                 .bold()
                                                                 .font(screen.size.height < 844 ? .body : .title3)
                                                                 .multilineTextAlignment(.leading)
