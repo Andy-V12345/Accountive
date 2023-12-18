@@ -196,7 +196,7 @@ struct AddingItemView: View {
                             }
                             //: VStack
 
-                            // Repeat options
+                            // MARK: ADD TO OTHER DAYS
 
                             VStack(spacing: screen.size.height < 700 ? 5 : 10) {
                                 Text("Add to other days?")
