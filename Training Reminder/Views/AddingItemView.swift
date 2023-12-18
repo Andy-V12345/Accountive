@@ -62,6 +62,9 @@ struct AddingItemView: View {
     @State var isAddEnabled = false
     
     @State var isAdding = false
+    
+    @State var friendGroups: [FriendGroup] = []
+    @State var selectedGroup: FriendGroup? = nil
 
     
     let firebaseService = FirebaseService()
@@ -78,6 +81,12 @@ struct AddingItemView: View {
             deleteIndex = nil
             preSelectedDaysForEditing = []
             isLoading = false
+        }
+    }
+    
+    func getFriendGroups() {
+        Task {
+            friendGroups = try await firebaseService.getFriendGroups(uid: authState.user!.uid)
         }
     }
     
@@ -102,7 +111,7 @@ struct AddingItemView: View {
                         })
                     }
 
-                    VStack(spacing: screen.size.height < 700 ? 5 : 10) {
+                    VStack(spacing: screen.size.height < 700 ? 3 : 7) {
                         //  MARK: HORIZONTAL SCROLLER
                         ScrollViewReader { index in
                             ScrollView(.horizontal, showsIndicators: false) {
@@ -112,8 +121,8 @@ struct AddingItemView: View {
                                         Text(days[i].prefix(3))
                                             .foregroundColor(.black)
                                             .bold()
-                                            .font(screen.size.height < 736 ? .title2 : .title)
-                                            .frame(width: screen.size.height < 736 ? 80 : 100, height: screen.size.height < 736 ? 80 : 120)
+                                            .font(screen.size.height < 736 ? .title3 : .title2)
+                                            .frame(width: screen.size.height < 736 ? 80 : 100, height: screen.size.height < 736 ? 70 : 100)
                                             .background(i+1 == dayIndex ? .gray.opacity(0.06) : .clear)
                                             .cornerRadius(10)
                                             .id(i+1)
@@ -144,7 +153,7 @@ struct AddingItemView: View {
                                 }
                                 //: HStack
                                 .padding(.horizontal, (screen.size.width - (screen.size.height < 736 ? 195 : 220)) / 2)
-                                .frame(height: screen.size.height < 736 ? 90 : 150)
+                                .frame(height: screen.size.height < 736 ? 80 : 120)
                             }
                             .onAppear { // MARK: ON APPEAR
                                 withAnimation(.spring()) {
@@ -153,6 +162,8 @@ struct AddingItemView: View {
                                 buttonsSelected[dayIndex-1] = true
 
                                 getActivities()
+                                
+                                getFriendGroups()
 
                             }
                             //: ScrollView
@@ -161,15 +172,16 @@ struct AddingItemView: View {
 
                         // MARK: INPUT FIELDS VSTACK
 
-                        VStack(spacing: screen.size.height < 700 ? 20 : 30) {
-                            // Title textfield
-                            VStack(spacing: 20) {
+                        VStack(spacing: screen.size.height < 700 ? 15 : 20) {
+                            // MARK: Title textfield
+                            VStack(spacing: 15) {
                                 HStack(spacing: 20) {
                                     Image(systemName: "pencil")
+                                        .font(.callout)
                                         .foregroundColor(.gray)
                                         .bold()
-                                    CustomTextField(placeholder: Text("Enter activity title").foregroundColor(.gray), text: $activityName, isSecure: false)
-                                        .frame(height: 50)
+                                    CustomTextField(placeholder: Text("Enter activity title").foregroundColor(.gray).font(.callout), text: $activityName, isSecure: false)
+                                        .frame(height: screen.size.height < 700 ? 40 : 45)
 
                                 }
                                 .overlay(
@@ -178,14 +190,15 @@ struct AddingItemView: View {
                                         .frame(maxWidth: .infinity, maxHeight:1)
                                         .background(LinearGradient(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .leading, endPoint: .trailing)), alignment: .bottom)
 
-                                // Details textfield
+                                // MARK: Details textfield
 
                                 HStack(spacing: 20) {
                                     Image(systemName: "info.circle")
+                                        .font(.callout)
                                         .foregroundColor(.gray)
                                         .bold()
-                                    CustomTextField(placeholder: Text("Enter details (optional)").foregroundColor(.gray), text: $activityDescription, isSecure: false)
-                                        .frame(height: 50)
+                                    CustomTextField(placeholder: Text("Enter details (optional)").foregroundColor(.gray).font(.callout), text: $activityDescription, isSecure: false)
+                                        .frame(height: screen.size.height < 700 ? 40 : 45)
 
                                 }
                                 .overlay(
@@ -200,6 +213,7 @@ struct AddingItemView: View {
 
                             VStack(spacing: screen.size.height < 700 ? 5 : 10) {
                                 Text("Add to other days?")
+                                    .font(.callout)
                                     .foregroundColor(.black)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 ScrollView(.horizontal, showsIndicators: false) {
@@ -210,9 +224,10 @@ struct AddingItemView: View {
                                                     buttonsSelected[i].toggle()
                                                 }, label: {
                                                     Text(days[i].prefix(3))
+                                                        .font(.footnote)
                                                         .foregroundColor(.black)
                                                         .padding(.horizontal, 20)
-                                                        .padding(.vertical, 10)
+                                                        .padding(.vertical, 8)
                                                         .background(Color(hex: "F8F9FA"))
                                                         .cornerRadius(10)
                                                         .opacity(buttonsSelected[i] ? 0.3 : 1)
@@ -222,8 +237,50 @@ struct AddingItemView: View {
                                     }
                                 }
                             }
+                            
+                            // MARK: SELECT A GROUP
+                            
+                            VStack(spacing: screen.size.height < 700 ? 5 : 10) {
+                                Text("Select a group?")
+                                    .font(.callout)
+                                    .foregroundColor(.black)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                if friendGroups.count > 0 {
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        HStack(spacing: 20) {
+                                            ForEach(friendGroups, id:\.self) { friendGroup in
+                                                Button(action: {
+                                                    if selectedGroup == nil || selectedGroup!.id != friendGroup.id {
+                                                        selectedGroup = friendGroup
+                                                    }
+                                                    else if selectedGroup!.id == friendGroup.id {
+                                                        selectedGroup = nil
+                                                    }
+                                                }, label: {
+                                                    Text(friendGroup.name)
+                                                        .font(.footnote)
+                                                        .foregroundColor(.black)
+                                                        .padding(.horizontal, 20)
+                                                        .padding(.vertical, 8)
+                                                        .background(Color(hex: "F8F9FA"))
+                                                        .cornerRadius(10)
+                                                        .opacity(selectedGroup != nil && selectedGroup!.id == friendGroup.id ? 0.3 : 1)
+                                                })
+                                            }
+                                            
+                                        }
+                                    }
+                                }
+                                else {
+                                    Text("You have no friend groups")
+                                        .font(.footnote)
+                                        .foregroundStyle(.gray)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .italic()
+                                }
+                            }
 
-                            //MARK: Add activity button
+                            // MARK: Add activity button
 
                             Button(action: {
                                 
@@ -273,8 +330,8 @@ struct AddingItemView: View {
                             }, label: {
                                 Image(systemName: "plus")
                                     .foregroundColor(.white)
-                                    .font(screen.size.height < 736 ? .title2 : .title)
-                                    .padding(.vertical, 20)
+                                    .font(screen.size.height < 736 ? .title3 : .title2)
+                                    .padding(.vertical, 18)
                                     .frame(maxWidth: .infinity)
                                     .background(LinearGradient(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing))
                                     .cornerRadius(10)
@@ -437,118 +494,119 @@ struct AddingItemView: View {
                                                         
                                                         Spacer()
                                                         
-                                                        Image(systemName: "xmark")
-                                                            .foregroundColor(.white)
-                                                            .onTapGesture {
-                                                                
-                                                                // Delete task from current day
-                                                                
-                                                                Task {
-                                                                    var unsubscribeDays: [String] = []
+                                                        HStack(spacing: 30) {
+                                                            
+                                                            Image(systemName: "xmark")
+                                                                .foregroundColor(.white)
+                                                                .onTapGesture {
                                                                     
-                                                                    withAnimation(.linear(duration: 0.3)) {
-                                                                        isDeleted = activity.id
-                                                                    }
+                                                                    // Delete task from current day
                                                                     
-                                                                    withAnimation(.spring(dampingFraction: 0.55).delay(0.3)) {
-                                                                        changeHeight = activity.id
-                                                                    }
-                                                                    
-                                                                    
-                                                                    do {
-                                                                        try await Task.sleep(nanoseconds: UInt64(1.15) * 1_000_000_000)
-                                                                        
-                                                                        let _ = try await firebaseService.deleteActivity(uid: authState.user!.uid, activityId: activity.id, groupPath: activity.groupPath, all: false)
-                                                                        
-                                                                        
-                                                                        isDeleting = nil
-                                                                        
-                                                                        activities.removeAll { value in
-                                                                            value.id == activity.id
-                                                                        }
-                                                                        
-                                                                        
-                                                                        isDeleted = nil
-                                                                        deleteIndex = nil
-                                                                        changeHeight = nil
-                                                                        
-                                                                        let filtered = activities.filter { value in
-                                                                            value.day == days[dayIndex - 1]
-                                                                        }
-                                                                        
-                                                                        if filtered.count == 0 {
-                                                                            unsubscribeDays.append(days[dayIndex-1])
-                                                                        }
-                                                                        
-                                                                        
-                                                                        firebaseService.removeSubscriptions(days: unsubscribeDays, uid: authState.user!.uid)
-                                                                        
-                                                                        try await firebaseService.unsubscribeFromTopic(fcmToken: UserDefaults.standard.string(forKey: "fcmKey")!, days: unsubscribeDays)
-                                                                        
-                                                                    }
-                                                                    catch {
-                                                                        errorMsg = "Error deleting activity"
-                                                                        isError = true
-                                                                    }
-                                                                }
-                                                            }
-                                                        
-                                                        Spacer()
-                                                        
-                                                        Image(systemName: "checkmark")
-                                                            .foregroundColor(.white)
-                                                            .onTapGesture {
-                                                                Task {
-                                                                    
-                                                                    withAnimation(.linear(duration: 0.3)) {
-                                                                        isDeleted = activity.id
-                                                                    }
-                                                                    
-                                                                    withAnimation(.spring(dampingFraction: 0.55).delay(0.3)) {
-                                                                        changeHeight = activity.id
-                                                                    }
-                                                                    
-                                                                    do {
-                                                                        
-                                                                        try await Task.sleep(nanoseconds: UInt64(1.15) * 1_000_000_000)
-                                                                        
-                                                                        let deletedIds = try await firebaseService.deleteActivity(uid: authState.user!.uid, activityId: activity.id, groupPath: activity.groupPath, all: true)
-                                                                        
-                                                                        isDeleting = nil
-                                                                        
-                                                                        for id in deletedIds {
-                                                                            activities.removeAll { value in
-                                                                                value.id == id
-                                                                            }
-                                                                        }
-                                                                        
-                                                                        
-                                                                        isDeleted = nil
-                                                                        deleteIndex = nil
-                                                                        changeHeight = nil
-                                                                        
+                                                                    Task {
                                                                         var unsubscribeDays: [String] = []
                                                                         
-                                                                        for day in days {
-                                                                            let filtered = activities.filter { value in
-                                                                                value.day == day
-                                                                            }
-                                                                            if filtered.count == 0 {
-                                                                                unsubscribeDays.append(day)
-                                                                            }
+                                                                        withAnimation(.linear(duration: 0.3)) {
+                                                                            isDeleted = activity.id
                                                                         }
-                                                                                                                                        
-                                                                        firebaseService.removeSubscriptions(days: unsubscribeDays, uid: authState.user!.uid)
                                                                         
-                                                                        try await firebaseService.unsubscribeFromTopic(fcmToken: UserDefaults.standard.string(forKey: "fcmKey")!, days: unsubscribeDays)
+                                                                        withAnimation(.spring(dampingFraction: 0.55).delay(0.3)) {
+                                                                            changeHeight = activity.id
+                                                                        }
                                                                         
-                                                                    }
-                                                                    catch {
-                                                                        errorMsg = "Error deleting activity"
-                                                                        isError = true
+                                                                        
+                                                                        do {
+                                                                            try await Task.sleep(nanoseconds: UInt64(1.15) * 1_000_000_000)
+                                                                            
+                                                                            let _ = try await firebaseService.deleteActivity(uid: authState.user!.uid, activityId: activity.id, groupPath: activity.groupPath, all: false)
+                                                                            
+                                                                            
+                                                                            isDeleting = nil
+                                                                            
+                                                                            activities.removeAll { value in
+                                                                                value.id == activity.id
+                                                                            }
+                                                                            
+                                                                            
+                                                                            isDeleted = nil
+                                                                            deleteIndex = nil
+                                                                            changeHeight = nil
+                                                                            
+                                                                            let filtered = activities.filter { value in
+                                                                                value.day == days[dayIndex - 1]
+                                                                            }
+                                                                            
+                                                                            if filtered.count == 0 {
+                                                                                unsubscribeDays.append(days[dayIndex-1])
+                                                                            }
+                                                                            
+                                                                            
+                                                                            firebaseService.removeSubscriptions(days: unsubscribeDays, uid: authState.user!.uid)
+                                                                            
+                                                                            try await firebaseService.unsubscribeFromTopic(fcmToken: UserDefaults.standard.string(forKey: "fcmKey")!, days: unsubscribeDays)
+                                                                            
+                                                                        }
+                                                                        catch {
+                                                                            errorMsg = "Error deleting activity"
+                                                                            isError = true
+                                                                        }
                                                                     }
                                                                 }
-                                                            }
+                                                            
+                                                            Image(systemName: "checkmark")
+                                                                .foregroundColor(.white)
+                                                                .onTapGesture {
+                                                                    Task {
+                                                                        
+                                                                        withAnimation(.linear(duration: 0.3)) {
+                                                                            isDeleted = activity.id
+                                                                        }
+                                                                        
+                                                                        withAnimation(.spring(dampingFraction: 0.55).delay(0.3)) {
+                                                                            changeHeight = activity.id
+                                                                        }
+                                                                        
+                                                                        do {
+                                                                            
+                                                                            try await Task.sleep(nanoseconds: UInt64(1.15) * 1_000_000_000)
+                                                                            
+                                                                            let deletedIds = try await firebaseService.deleteActivity(uid: authState.user!.uid, activityId: activity.id, groupPath: activity.groupPath, all: true)
+                                                                            
+                                                                            isDeleting = nil
+                                                                            
+                                                                            for id in deletedIds {
+                                                                                activities.removeAll { value in
+                                                                                    value.id == id
+                                                                                }
+                                                                            }
+                                                                            
+                                                                            
+                                                                            isDeleted = nil
+                                                                            deleteIndex = nil
+                                                                            changeHeight = nil
+                                                                            
+                                                                            var unsubscribeDays: [String] = []
+                                                                            
+                                                                            for day in days {
+                                                                                let filtered = activities.filter { value in
+                                                                                    value.day == day
+                                                                                }
+                                                                                if filtered.count == 0 {
+                                                                                    unsubscribeDays.append(day)
+                                                                                }
+                                                                            }
+                                                                            
+                                                                            firebaseService.removeSubscriptions(days: unsubscribeDays, uid: authState.user!.uid)
+                                                                            
+                                                                            try await firebaseService.unsubscribeFromTopic(fcmToken: UserDefaults.standard.string(forKey: "fcmKey")!, days: unsubscribeDays)
+                                                                            
+                                                                        }
+                                                                        catch {
+                                                                            errorMsg = "Error deleting activity"
+                                                                            isError = true
+                                                                        }
+                                                                    }
+                                                                }
+                                                        }
                                                         
                                                     }
                                                 }
@@ -590,7 +648,8 @@ struct AddingItemView: View {
                     }
 
                 }
-                .padding(.vertical, 10)
+                .padding(.bottom, 10)
+                .padding(.top, 5)
                 .padding(.horizontal, 20)
                 .ignoresSafeArea(.keyboard)
                 //: VStack

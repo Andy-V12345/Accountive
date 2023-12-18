@@ -244,9 +244,6 @@ struct HomeView: View {
                                                             
                                                             Spacer()
                                                             
-                                                            
-                                                            Spacer()
-                                                            
                                                             HStack(spacing: 30) {
                                                                 Image(systemName: "checkmark")
                                                                     .foregroundColor(.white)
