@@ -287,6 +287,10 @@ struct ActivityLabel: View {
         .onAppear {
             newName = activity.name
             newDescription = activity.description
+            
+            activity.printActivity()
+        }
+        .onDisappear { // MARK: LEAVE HERE TO FORCE ACTIVITY LABEL TO REFRESH FRIEND GROUP
         }
         
     }

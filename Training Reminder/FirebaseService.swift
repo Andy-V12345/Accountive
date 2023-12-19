@@ -47,6 +47,11 @@ class Activity: Codable, Identifiable, Hashable {
             return Firestore.firestore().document(groupPath)
         }
     }
+    
+    func printActivity() {
+        print(self.name)
+        print("friendGroupId: \(self.friendGroupId ?? "None")")
+    }
 
 }
 
