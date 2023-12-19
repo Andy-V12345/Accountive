@@ -594,7 +594,8 @@ class FirebaseService {
         
         oldActivityDoc.updateData([
             "title": newActivity.name,
-            "description": newActivity.description
+            "description": newActivity.description,
+            "friendGroupId": newActivity.friendGroupId ?? ""
         ]) { err in
             if let err = err {
                 print("Error updating document: \(err)")

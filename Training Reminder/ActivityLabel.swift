@@ -40,6 +40,7 @@ struct ActivityLabel: View {
     @State var newDescription = ""
     
     @State var friendGroups: [FriendGroup] = []
+    @State var selectedGroupId = ""
     
     @State var listener: Any? = nil
     
@@ -105,6 +106,7 @@ struct ActivityLabel: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .font(.headline)
                                 .fontWeight(.regular)
+                                .matchedGeometryEffect(id: "groupLabel", in: namespace)
                             
                             Text("Description:")
                                 .font(.headline)
@@ -113,7 +115,7 @@ struct ActivityLabel: View {
                                 .matchedGeometryEffect(id: "descriptionLabel", in: namespace)
                             
                             Text(activity.description == "" ? "None" : activity.description)
-                                .font(.headline)
+                                .font(.body)
                                 .fontWeight(.regular)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .multilineTextAlignment(.leading)
@@ -198,7 +200,7 @@ struct ActivityLabel: View {
                 // MARK: UPDATING LABEL
                 
                 VStack(spacing: 25) {
-                        VStack {
+                    VStack(spacing: 8) {
                             TextField(newName, text: $newName)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .fontWeight(.semibold)
@@ -216,16 +218,57 @@ struct ActivityLabel: View {
                                 )
                                 .matchedGeometryEffect(id: "divider", in: namespace)
                             
+                            VStack(spacing: 5) {
+                                Text("Select a group?")
+                                    .bold()
+                                    .foregroundColor(.black)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .matchedGeometryEffect(id: "groupLabel", in: namespace)
+                                if friendGroups.count > 0 {
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        HStack(spacing: 20) {
+                                            ForEach(friendGroups, id:\.self) { friendGroup in
+                                                Button(action: {
+                                                    if selectedGroupId == "" || selectedGroupId != friendGroup.id {
+                                                        selectedGroupId = friendGroup.id
+                                                    }
+                                                    else if selectedGroupId == friendGroup.id {
+                                                        selectedGroupId = ""
+                                                    }
+                                                }, label: {
+                                                    Text(friendGroup.name)
+                                                        .font(.callout)
+                                                        .foregroundColor(.white)
+                                                        .padding(.horizontal, 20)
+                                                        .padding(.vertical, 8)
+                                                        .background(Color(hex: "A8AABD"))
+                                                        .cornerRadius(10)
+                                                        .opacity(selectedGroupId != "" && selectedGroupId == friendGroup.id ? 0.3 : 1)
+                                                })
+                                            }
+                                            
+                                        }
+                                    }
+                                }
+                                else {
+                                    Text("You have no friend groups")
+                                        .font(.callout)
+                                        .foregroundStyle(.gray)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .italic()
+                                }
+                            }
+                            
                             VStack(alignment: .leading, spacing: 3) {
                                 Text("Description:")
-                                    .font(.headline)
+                                    .font(.body)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .foregroundColor(.black)
                                     .bold()
                                     .matchedGeometryEffect(id: "descriptionLabel", in: namespace)
                                 
                                 CustomTextField(placeholder: Text("No description").italic().foregroundColor(.gray), text: $newDescription, isSecure: false)
-                                    .font(.headline)
+                                    .font(.callout)
                                     .fontWeight(.regular)
                                     .matchedGeometryEffect(id: "description", in: namespace)
                                 
@@ -259,6 +302,7 @@ struct ActivityLabel: View {
                                 hideKeyboard()
                                 activity.name = newName
                                 activity.description = newDescription
+                                activity.friendGroupId = selectedGroupId
                                 firebaseService.updateActivityByDay(newActivity: activity, uid: authState.user!.uid)
                                 
                                 withAnimation(.spring(duration: 0.4, bounce: 0.3)) {
@@ -287,6 +331,7 @@ struct ActivityLabel: View {
         .onAppear {
             newName = activity.name
             newDescription = activity.description
+            selectedGroupId = activity.friendGroupId ?? ""
             
             activity.printActivity()
         }
