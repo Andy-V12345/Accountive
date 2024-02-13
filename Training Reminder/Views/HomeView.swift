@@ -11,8 +11,6 @@ import AlertToast
 import PopupView
 import FirebaseFirestore
 
-// TODO: WORK ON ADDING ACTIVITIES
-
 struct HomeView: View {
     
     // MARK: Properties
@@ -216,7 +214,7 @@ struct HomeView: View {
                                     Spacer()
                                     
                                     
-                                    // MARK: ITEM LIST
+                                    // MARK: ACTIVITIES LIST
                                     
                                     ScrollView(.vertical) {
                                         VStack(spacing: 15) {

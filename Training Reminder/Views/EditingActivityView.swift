@@ -268,10 +268,3 @@ struct EditingActivityView: View {
         .ignoresSafeArea(.keyboard)
     }
 }
-
-//struct EditingPreview: PreviewProvider {
-//    static var previews: some View {
-//        EditingActivityView(activity: Activity(id: "", name: "bruh", description: "", isDone: false, day: "Monday", groupPath: ""), activityName: "Run", activityDescription: "", preSelectedDays: ["Monday"])
-//    }
-//}
-

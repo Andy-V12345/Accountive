@@ -333,6 +333,3 @@ struct AddingGroupView: View {
     }
 }
 
-//#Preview {
-//    AddingGroupView()
-//}

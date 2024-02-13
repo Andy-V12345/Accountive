@@ -64,7 +64,7 @@ struct ForgotPasswordView: View {
                             .frame(width: 300)
                             .multilineTextAlignment(.center)
                         
-                        // Email textfield
+                        // MARK: Email textfield
                         
                         HStack(spacing: 20) {
                             Image(systemName: "envelope")
@@ -84,7 +84,7 @@ struct ForgotPasswordView: View {
                     }
                     
                     Button(action: {
-                        // send link
+                        // MARK: send link
                         if validateEmail(email: email) {
                             Auth.auth().sendPasswordReset(withEmail: email) { error in
                                 if error != nil {
@@ -132,11 +132,5 @@ struct ForgotPasswordView: View {
         .toast(isPresenting: $isError, duration: 1, alert: {
             AlertToast(displayMode: .alert, type: .error(Color(hex: "ff5858")), subTitle: errorMsg)
         })
-    }
-}
-
-struct ForgotPasswordView_Previews: PreviewProvider {
-    static var previews: some View {
-        ForgotPasswordView()
     }
 }

@@ -37,7 +37,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
-        print("lsusususuuiiiiiiii")
         let userInfo = response.notification.request.content.userInfo
         
         if let messageID = userInfo[gcmMessageIDKey] {
@@ -56,7 +55,6 @@ extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         
         let deviceToken:[String: String] = ["token": fcmToken ?? ""]
-        print("Device token: ", deviceToken) // This token can be used for testing notifications on FCM
         UserDefaults.standard.set(deviceToken["token"], forKey: "fcmKey")
     }
 }

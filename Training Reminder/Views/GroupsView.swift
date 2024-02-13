@@ -261,33 +261,3 @@ struct GroupsView: View {
         
     }
 }
-
-//#Preview {
-//    VStack(spacing: 15) {
-//        HStack {
-//            Image(systemName: "arrow.right")
-//                .hidden()
-//            Spacer()
-//
-//            Text("ACCOUNTIVE")
-//                .frame(maxWidth: .infinity, alignment: .center)
-//                .gradientForeground(colors: [Color(hex: "b597f6"), Color(hex: "96c6ea")], startPoint: .bottomLeading, endPoint: .topTrailing)
-//                .font(.system(size: 30))
-//                .fontWidth(.condensed)
-//                .bold()
-//
-//            Spacer()
-//
-//            Button(action: {
-//                AppState.shared.showSocial = false
-//            }, label: {
-//                Image(systemName: "xmark")
-//                    .font(.title3)
-//                    .foregroundColor(.black)
-//            })
-//        } //: Header HStack
-//        GroupsView()
-//    }
-//    .padding(.horizontal, 20)
-//    .padding(.top, 10)
-//}
