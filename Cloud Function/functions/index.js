@@ -73,27 +73,6 @@ exports.notifyIndividual = onCall((request) => {
 
 })
 
-exports.notifyTest = onRequest((req, res) => {
-
-    const message = {
-        token: "cnAKMLWwW0X7rxcLSWd4DM:APA91bHSaHWOJF8R1WztmWXcPDlbf4yKEvW0fqgZSy4DyIVOPxkWTw-Y7bTeHH_GRDeH08ijhnhDzLJ57JXTVHToT3pYw3EFITdLxEltENwTtf_9vwa0IdOzH7ssEa03YSTjZsrFT7DJ",
-        notification: {
-            title: "Accountive",
-            body: "hello"
-        },
-        data: {
-            type: "individual"
-        }
-    }
-
-    messaging.getMessaging().send(message).then((result) => {
-        res.json({result: result})
-    })
-    .catch((error) => {
-        res.json({error: error})
-    })
-})
-
 exports.subscribeToDays = onCall((request) => {
 
     if (!request.auth) {
